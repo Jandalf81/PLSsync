@@ -1,6 +1,7 @@
 ﻿Public Class frm_Main
     Public devices As IEnumerable(Of MediaDevices.MediaDevice)
     Public selectedDevice As MediaDevices.MediaDevice
+    Public DeviceMainFolder As String = ""
     'Public deviceList As New List(Of MediaDevices.MediaDevice)
     'Public bs As Equin.ApplicationFramework.BindingListView(Of MediaDevices.MediaDevice) = New Equin.ApplicationFramework.BindingListView(Of MediaDevices.MediaDevice)(deviceList)
 
@@ -128,6 +129,8 @@
             If storageInfo Is Nothing Then
                 e.Graphics.DrawString("n/a", Me.Font, Brushes.Black, pic_Progress.ClientRectangle, sf)
             Else
+                DeviceMainFolder = storageInfo.Description
+
                 Dim percent As Integer = Math.Round(storageInfo.FreeSpaceInBytes * 100 / storageInfo.Capacity, 0)
                 Dim color As Brush
 
@@ -155,5 +158,9 @@
 
     Private Sub frm_Main_Resize(sender As Object, e As EventArgs) Handles Me.Resize
         pic_Progress.Refresh()
+    End Sub
+
+    Private Sub btn_SetMainMusicFolder_Click(sender As Object, e As EventArgs) Handles btn_SetMainMusicFolder.Click
+        ' TODO create a way to set the main folder
     End Sub
 End Class
