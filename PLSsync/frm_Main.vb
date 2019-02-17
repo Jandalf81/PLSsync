@@ -110,42 +110,46 @@
 
 
     Private Sub pic_Progress_Paint(sender As Object, e As PaintEventArgs) Handles pic_Progress.Paint
+        ' reset
+        e.Graphics.Clear(pic_Progress.BackColor)
+        e.Graphics.DrawRectangle(New Pen(Brushes.Gray, 1), 0, 0, pic_Progress.ClientSize.Width - 1, pic_Progress.ClientSize.Height - 1)
+
+        e.Graphics.TextRenderingHint = Drawing.Text.TextRenderingHint.AntiAliasGridFit
+        Dim sf As New StringFormat()
+        sf.Alignment = StringAlignment.Near
+        sf.LineAlignment = StringAlignment.Center
+
         If selectedDevice Is Nothing Then
             e.Graphics.DrawRectangle(New Pen(Brushes.Gray, 1), 0, 0, pic_Progress.ClientSize.Width - 1, pic_Progress.ClientSize.Height - 1)
         Else
             Dim objects = selectedDevice.FunctionalObjects(MediaDevices.FunctionalCategory.Storage)
             Dim storageInfo As MediaDevices.MediaStorageInfo = selectedDevice.GetStorageInfo(objects.First())
 
-            Dim percent As Integer = Math.Round(storageInfo.FreeSpaceInBytes * 100 / storageInfo.Capacity, 0)
-            Dim color As Brush
+            If storageInfo Is Nothing Then
+                e.Graphics.DrawString("n/a", Me.Font, Brushes.Black, pic_Progress.ClientRectangle, sf)
+            Else
+                Dim percent As Integer = Math.Round(storageInfo.FreeSpaceInBytes * 100 / storageInfo.Capacity, 0)
+                Dim color As Brush
 
-            Select Case percent
-                Case < 10
-                    color = Brushes.Red
-                Case < 20
-                    color = Brushes.Orange
-                Case Else
-                    color = Brushes.LightGreen
-            End Select
+                Select Case percent
+                    Case < 10
+                        color = Brushes.Red
+                    Case < 20
+                        color = Brushes.Orange
+                    Case Else
+                        color = Brushes.LightGreen
+                End Select
 
-            ' reset
-            e.Graphics.Clear(pic_Progress.BackColor)
+                ' draw the background
+                Dim fraction As Single = storageInfo.FreeSpaceInBytes / storageInfo.Capacity
+                Dim width As Integer = fraction * pic_Progress.ClientSize.Width
 
-            ' draw the background and border
-            Dim fraction As Single = storageInfo.FreeSpaceInBytes / storageInfo.Capacity
-            Dim width As Integer = fraction * pic_Progress.ClientSize.Width
+                e.Graphics.FillRectangle(color, 0, 0, width, pic_Progress.ClientSize.Height)
+                e.Graphics.DrawRectangle(New Pen(Brushes.Gray, 1), 0, 0, pic_Progress.ClientSize.Width - 1, pic_Progress.ClientSize.Height - 1)
 
-            e.Graphics.FillRectangle(color, 0, 0, width, pic_Progress.ClientSize.Height)
-            e.Graphics.DrawRectangle(New Pen(Brushes.Gray, 1), 0, 0, pic_Progress.ClientSize.Width - 1, pic_Progress.ClientSize.Height - 1)
-
-            ' draw the text
-            e.Graphics.TextRenderingHint = Drawing.Text.TextRenderingHint.AntiAliasGridFit
-
-            Dim sf As New StringFormat()
-            sf.Alignment = StringAlignment.Near
-            sf.LineAlignment = StringAlignment.Center
-
-            e.Graphics.DrawString(String.Format("{0} GB free of {1} GB ({2}%)", Math.Round(storageInfo.FreeSpaceInBytes / 1024 / 1024 / 1024, 2), Math.Round(storageInfo.Capacity / 1024 / 1024 / 1024, 2), percent), Me.Font, Brushes.Black, pic_Progress.ClientRectangle, sf)
+                ' draw the text
+                e.Graphics.DrawString(String.Format("{0} GB free of {1} GB ({2}%)", Math.Round(storageInfo.FreeSpaceInBytes / 1024 / 1024 / 1024, 2), Math.Round(storageInfo.Capacity / 1024 / 1024 / 1024, 2), percent), Me.Font, Brushes.Black, pic_Progress.ClientRectangle, sf)
+            End If
         End If
     End Sub
 
