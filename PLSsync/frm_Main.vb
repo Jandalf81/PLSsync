@@ -1,27 +1,27 @@
-﻿Public Class frm_Main
+﻿Imports System.ComponentModel
+
+Public Class frm_Main
+    Public preset As New Preset()
+
     Public devices As IEnumerable(Of MediaDevices.MediaDevice)
     Public selectedDevice As MediaDevices.MediaDevice
+
+    Public bs_Devices As New BindingSource()
+    Public bs_PlaylistFiles As New BindingSource()
+
     Public DeviceMainFolder As String = ""
-    'Public deviceList As New List(Of MediaDevices.MediaDevice)
-    'Public bs As Equin.ApplicationFramework.BindingListView(Of MediaDevices.MediaDevice) = New Equin.ApplicationFramework.BindingListView(Of MediaDevices.MediaDevice)(deviceList)
 
-
-    Public Sub refreshDevices()
+    Private Sub refreshDevices()
         devices = MediaDevices.MediaDevice.GetDevices()
-        'Dim deviceList As New List(Of MediaDevices.MediaDevice)
 
         For Each device In devices
             device.Connect()
-            ' deviceList.Add(device)
         Next
 
-        'bs = New Equin.ApplicationFramework.BindingListView(Of MediaDevices.MediaDevice)(deviceList)
-        dgv_Devices.DataSource = devices
+        bs_Devices.DataSource = devices
+
+        dgv_Devices.DataSource = bs_Devices
     End Sub
-
-
-
-
 
     Private Sub Button1_Click(sender As Object, e As EventArgs)
         Dim devices As IEnumerable(Of MediaDevices.MediaDevice) = MediaDevices.MediaDevice.GetDevices()
@@ -47,17 +47,9 @@
         Next
     End Sub
 
+#Region "form"
     Private Sub frm_Main_Load(sender As Object, e As EventArgs) Handles Me.Load
-        ' settings for DataGridView
-        With dgv_Devices
-            .ReadOnly() = True
-            .AllowUserToAddRows = False
-            .AutoGenerateColumns = False
-            .SelectionMode = DataGridViewSelectionMode.FullRowSelect
-            .AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCells
-        End With
-
-        ' prepare columns for DataGridView
+        ' prepare columns for DataGridView dgv_Devices
         Dim col_FriendlyName As New DataGridViewTextBoxColumn()
         col_FriendlyName.DataPropertyName = "FriendlyName"
         col_FriendlyName.Name = "Friendly Name"
@@ -83,33 +75,87 @@
         col_SerialNumber.Name = "SerialNumber"
 
         ' add prepared columns to DataGridView
-        With dgv_Devices.Columns
-            .Add(col_Manufacturer)
-            .Add(col_Description)
-            .Add(col_DeviceType)
-            .Add(col_FriendlyName)
-            .Add(col_PowerLevel)
-            .Add(col_SerialNumber)
+        With dgv_Devices
+            .ReadOnly() = True
+            .AllowUserToAddRows = False
+            .AutoGenerateColumns = False
+            .SelectionMode = DataGridViewSelectionMode.FullRowSelect
+            .AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCells
+            .RowHeadersVisible = False
+
+            .Columns.Add(col_Manufacturer)
+            .Columns.Add(col_Description)
+            .Columns.Add(col_DeviceType)
+            .Columns.Add(col_FriendlyName)
+            .Columns.Add(col_PowerLevel)
+            .Columns.Add(col_SerialNumber)
+        End With
+
+        ' prepare columns for DataGridView dgv_PlaylistFiles
+        Dim col_Playlist As New DataGridViewTextBoxColumn()
+        col_Playlist.DataPropertyName = "Filename"
+        col_Playlist.Name = "Playlist File"
+
+        Dim col_NumberOfTracks As New DataGridViewTextBoxColumn()
+        col_NumberOfTracks.DataPropertyName = "NumberOfTracks"
+        col_NumberOfTracks.Name = "Tracks"
+
+        bs_PlaylistFiles.DataSource = preset.Playlists
+
+        With dgv_PlaylistFiles
+            .ReadOnly = True
+            .AllowUserToAddRows = False
+            .AutoGenerateColumns = False
+            .SelectionMode = DataGridViewSelectionMode.FullRowSelect
+            .AutoSizeColumnsMode = DataGridViewAutoSizeColumnMode.AllCells
+            .RowHeadersVisible = False
+
+            .Columns.Add(col_Playlist)
+            .Columns.Add(col_NumberOfTracks)
+
+            .DataSource = bs_PlaylistFiles
         End With
 
         refreshDevices()
     End Sub
 
+    Private Sub frm_Main_Resize(sender As Object, e As EventArgs) Handles Me.Resize
+        pic_Progress.Refresh()
+    End Sub
+
+    Private Sub frm_Main_Closing(sender As Object, e As CancelEventArgs) Handles Me.Closing
+        If (Not selectedDevice Is Nothing) Then
+            preset.Save(selectedDevice.Description + "_" + selectedDevice.SerialNumber)
+        End If
+    End Sub
+#End Region
+
+#Region "form grp_Devices"
     Private Sub btn_RefreshDevices_Click(sender As Object, e As EventArgs) Handles btn_RefreshDevices.Click
         refreshDevices()
     End Sub
 
     Private Sub btn_UseSelectedDevice_Click(sender As Object, e As EventArgs) Handles btn_UseSelectedDevice.Click
+        If (Not selectedDevice Is Nothing) Then
+            preset.Save(selectedDevice.Description + "_" + selectedDevice.SerialNumber)
+        End If
+
         ' get currently selected device from DataGridView
         selectedDevice = dgv_Devices.SelectedRows(0).DataBoundItem
 
         txt_Sync_DeviceName.Text = String.Format("{0}, {1}, {2}", selectedDevice.Manufacturer, selectedDevice.Description, selectedDevice.SerialNumber)
 
         pic_Progress.Refresh()
+
+        preset = New Preset()
+        preset.Load(selectedDevice.Description + "_" + selectedDevice.SerialNumber)
+        bs_PlaylistFiles.DataSource = preset.Playlists
     End Sub
+#End Region
 
+#Region "form grp_Sync"
 
-
+#Region "form grp_Sync grp_Device"
     Private Sub pic_Progress_Paint(sender As Object, e As PaintEventArgs) Handles pic_Progress.Paint
         ' reset
         e.Graphics.Clear(pic_Progress.BackColor)
@@ -156,11 +202,25 @@
         End If
     End Sub
 
-    Private Sub frm_Main_Resize(sender As Object, e As EventArgs) Handles Me.Resize
-        pic_Progress.Refresh()
-    End Sub
-
     Private Sub btn_SetMainMusicFolder_Click(sender As Object, e As EventArgs) Handles btn_SetMainMusicFolder.Click
         ' TODO create a way to set the main folder
     End Sub
+#End Region
+
+#Region "form grp_Sync grp_Playlists"
+    Private Sub btn_PlaylistFiles_Add_Click(sender As Object, e As EventArgs) Handles btn_PlaylistFiles_Add.Click
+        OpenFileDialog.Filter = "playlist files (*.m3u, *.m3u8)|*.m3u;*.m3u8"
+        OpenFileDialog.Multiselect = False
+        OpenFileDialog.Title = "Add Playlist File"
+
+        If (OpenFileDialog.ShowDialog() = DialogResult.OK) Then
+            Dim pl As New Playlist(OpenFileDialog.FileName)
+
+            bs_PlaylistFiles.Add(pl)
+        End If
+    End Sub
+#End Region
+
+#End Region
+
 End Class
