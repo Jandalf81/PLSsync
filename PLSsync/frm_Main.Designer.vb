@@ -212,7 +212,6 @@ Partial Class frm_Main
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.txt_Sync_MainMusicFolder.Location = New System.Drawing.Point(111, 70)
         Me.txt_Sync_MainMusicFolder.Name = "txt_Sync_MainMusicFolder"
-        Me.txt_Sync_MainMusicFolder.ReadOnly = True
         Me.txt_Sync_MainMusicFolder.Size = New System.Drawing.Size(333, 20)
         Me.txt_Sync_MainMusicFolder.TabIndex = 7
         '

@@ -100,8 +100,6 @@ Public Class frm_Main
         col_NumberOfTracks.DataPropertyName = "NumberOfTracks"
         col_NumberOfTracks.Name = "Tracks"
 
-        bs_PlaylistFiles.DataSource = preset.Playlists
-
         With dgv_PlaylistFiles
             .ReadOnly = True
             .AllowUserToAddRows = False
@@ -115,6 +113,9 @@ Public Class frm_Main
 
             .DataSource = bs_PlaylistFiles
         End With
+
+        ' set BindingSources
+        bs_PlaylistFiles.DataSource = preset.Playlists
 
         refreshDevices()
     End Sub
@@ -150,6 +151,7 @@ Public Class frm_Main
         preset = New Preset()
         preset.Load(selectedDevice.Description + "_" + selectedDevice.SerialNumber)
         bs_PlaylistFiles.DataSource = preset.Playlists
+        txt_Sync_MainMusicFolder.Text = preset.RemoteMainPath
     End Sub
 #End Region
 
@@ -204,6 +206,10 @@ Public Class frm_Main
 
     Private Sub btn_SetMainMusicFolder_Click(sender As Object, e As EventArgs) Handles btn_SetMainMusicFolder.Click
         ' TODO create a way to set the main folder
+    End Sub
+
+    Private Sub txt_Sync_MainMusicFolder_TextChanged(sender As Object, e As EventArgs) Handles txt_Sync_MainMusicFolder.TextChanged
+        preset.RemoteMainPath = txt_Sync_MainMusicFolder.Text
     End Sub
 #End Region
 
