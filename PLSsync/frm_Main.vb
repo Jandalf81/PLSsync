@@ -19,7 +19,6 @@ Public Class frm_Main
         Next
 
         bs_Devices.DataSource = devices
-
         dgv_Devices.DataSource = bs_Devices
     End Sub
 
@@ -49,6 +48,7 @@ Public Class frm_Main
 
     Private Sub Button1_Click_1(sender As Object, e As EventArgs) Handles Button1.Click
         Dim t As New Track("E:\_PARsync\Chiptunes\Chipzel\Disconnected (2010)\01 - Something beautiful.mp3")
+        t.convert()
         t.upload()
     End Sub
 

@@ -10,13 +10,10 @@
         End Get
         Set(value As String)
             _localPath = value
-
-            '_remotePath = Replace(Replace(value, frm_Main.preset.LocalMainPath, frm_Main.preset.RemoteMainPath), "\", "/")
             _remotePath = Replace(value, frm_Main.preset.LocalMainPath, frm_Main.preset.RemoteMainPath)
 
             _localPathOnly = IO.Path.GetDirectoryName(value)
             _localFilenameOnly = IO.Path.GetFileName(value)
-
             _remotePathOnly = IO.Path.GetDirectoryName(_remotePath)
 
             Select Case True
@@ -77,5 +74,16 @@
                 frm_Main.selectedDevice.UploadFile(fs, _remotePathOnly + "\" + Me.coverFile)
             End If
         End If
+    End Sub
+
+    Public Sub convert()
+        If (My.Computer.FileSystem.FileExists(My.Application.Info.DirectoryPath + "\tmp\converted.mp3") = True) Then
+            My.Computer.FileSystem.DeleteFile(My.Application.Info.DirectoryPath + "\tmp\converted.mp3")
+        End If
+
+        ' TODO add LAME conversion here
+        My.Computer.FileSystem.CopyFile(Me._localPath, My.Application.Info.DirectoryPath + "\tmp\converted.mp3")
+
+        Me._localPath = My.Application.Info.DirectoryPath + "\tmp\converted.mp3"
     End Sub
 End Class
