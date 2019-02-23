@@ -47,6 +47,11 @@ Public Class frm_Main
         Next
     End Sub
 
+    Private Sub Button1_Click_1(sender As Object, e As EventArgs) Handles Button1.Click
+        Dim t As New Track("E:\_PARsync\Chiptunes\Chipzel\Disconnected (2010)\01 - Something beautiful.mp3")
+        t.upload()
+    End Sub
+
 #Region "form"
     Private Sub frm_Main_Load(sender As Object, e As EventArgs) Handles Me.Load
         ' prepare columns for DataGridView dgv_Devices
@@ -152,6 +157,7 @@ Public Class frm_Main
         preset.Load(selectedDevice.Description + "_" + selectedDevice.SerialNumber)
         bs_PlaylistFiles.DataSource = preset.Playlists
         txt_Sync_MainMusicFolder.Text = preset.RemoteMainPath
+        txt_Sync_LocalMainMusicFolder.Text = preset.LocalMainPath
     End Sub
 #End Region
 
@@ -224,6 +230,11 @@ Public Class frm_Main
 
             bs_PlaylistFiles.Add(pl)
         End If
+    End Sub
+
+    Private Sub btn_PlaylistFiles_Remove_Click(sender As Object, e As EventArgs) Handles btn_PlaylistFiles_Remove.Click
+        Dim selectedPlaylist As Playlist = dgv_PlaylistFiles.SelectedRows(0).DataBoundItem
+        bs_PlaylistFiles.Remove(selectedPlaylist)
     End Sub
 #End Region
 

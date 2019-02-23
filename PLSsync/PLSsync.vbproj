@@ -106,6 +106,7 @@
     <Compile Include="Playlist.vb" />
     <Compile Include="Preset.vb" />
     <Compile Include="Settings.vb" />
+    <Compile Include="Track.vb" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="frm_Main.resx">

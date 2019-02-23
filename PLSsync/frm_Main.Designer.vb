@@ -41,6 +41,8 @@ Partial Class frm_Main
         Me.txt_Sync_DeviceName = New System.Windows.Forms.TextBox()
         Me.lbl_Sync_DeviceName = New System.Windows.Forms.Label()
         Me.OpenFileDialog = New System.Windows.Forms.OpenFileDialog()
+        Me.Button1 = New System.Windows.Forms.Button()
+        Me.txt_Sync_LocalMainMusicFolder = New System.Windows.Forms.TextBox()
         Me.grp_Devices.SuspendLayout()
         CType(Me.dgv_Devices, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.grp_Sync.SuspendLayout()
@@ -104,6 +106,7 @@ Partial Class frm_Main
         Me.grp_Sync.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
             Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.grp_Sync.Controls.Add(Me.Button1)
         Me.grp_Sync.Controls.Add(Me.grp_PlaylistFiles)
         Me.grp_Sync.Controls.Add(Me.grp_SelectedDevice)
         Me.grp_Sync.Location = New System.Drawing.Point(12, 219)
@@ -182,6 +185,7 @@ Partial Class frm_Main
         '
         Me.grp_SelectedDevice.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.grp_SelectedDevice.Controls.Add(Me.txt_Sync_LocalMainMusicFolder)
         Me.grp_SelectedDevice.Controls.Add(Me.btn_SetMainMusicFolder)
         Me.grp_SelectedDevice.Controls.Add(Me.txt_Sync_MainMusicFolder)
         Me.grp_SelectedDevice.Controls.Add(Me.lbl_Sync_MainMusicFolder)
@@ -262,6 +266,22 @@ Partial Class frm_Main
         Me.lbl_Sync_DeviceName.TabIndex = 0
         Me.lbl_Sync_DeviceName.Text = "Device Name:"
         '
+        'Button1
+        '
+        Me.Button1.Location = New System.Drawing.Point(56, 200)
+        Me.Button1.Name = "Button1"
+        Me.Button1.Size = New System.Drawing.Size(75, 23)
+        Me.Button1.TabIndex = 2
+        Me.Button1.Text = "Button1"
+        Me.Button1.UseVisualStyleBackColor = True
+        '
+        'txt_Sync_LocalMainMusicFolder
+        '
+        Me.txt_Sync_LocalMainMusicFolder.Location = New System.Drawing.Point(111, 97)
+        Me.txt_Sync_LocalMainMusicFolder.Name = "txt_Sync_LocalMainMusicFolder"
+        Me.txt_Sync_LocalMainMusicFolder.Size = New System.Drawing.Size(333, 20)
+        Me.txt_Sync_LocalMainMusicFolder.TabIndex = 9
+        '
         'frm_Main
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -302,4 +322,6 @@ Partial Class frm_Main
     Friend WithEvents btn_PlaylistFiles_Remove As Button
     Friend WithEvents dgv_PlaylistFiles As DataGridView
     Friend WithEvents OpenFileDialog As OpenFileDialog
+    Friend WithEvents Button1 As Button
+    Friend WithEvents txt_Sync_LocalMainMusicFolder As TextBox
 End Class
