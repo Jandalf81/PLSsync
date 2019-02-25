@@ -81,8 +81,22 @@
             My.Computer.FileSystem.DeleteFile(My.Application.Info.DirectoryPath + "\tmp\converted.mp3")
         End If
 
-        ' TODO add LAME conversion here
-        My.Computer.FileSystem.CopyFile(Me._localPath, My.Application.Info.DirectoryPath + "\tmp\converted.mp3")
+        'My.Computer.FileSystem.CopyFile(Me._localPath, My.Application.Info.DirectoryPath + "\tmp\converted.mp3")
+
+        ' LAME conversion
+        Dim lame As New Process()
+
+        With lame.StartInfo
+            .FileName = My.Application.Info.DirectoryPath + "\lame\lame.exe"
+            ' TODO make arguments dynamic
+            .Arguments = "--nohist --preset medium """ + Me.localPath + """ """ + My.Application.Info.DirectoryPath + "\tmp\converted.mp3"""
+
+            .CreateNoWindow = True
+            .UseShellExecute = False
+        End With
+
+        lame.Start()
+        lame.WaitForExit()
 
         Me._localPath = My.Application.Info.DirectoryPath + "\tmp\converted.mp3"
     End Sub

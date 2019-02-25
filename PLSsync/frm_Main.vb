@@ -48,8 +48,14 @@ Public Class frm_Main
 
     Private Sub Button1_Click_1(sender As Object, e As EventArgs) Handles Button1.Click
         Dim t As New Track("E:\_PARsync\Chiptunes\Chipzel\Disconnected (2010)\01 - Something beautiful.mp3")
+
+        txt_Log.Text += DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss: ") & "Starte Konvertierung..." + vbCrLf
         t.convert()
+        txt_Log.Text += DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss: ") & "Konvertierung beendet" + vbCrLf
+
+        txt_Log.Text += DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss: ") & "Starte Upload..." + vbCrLf
         t.upload()
+        txt_Log.Text += DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss: ") & "Upload beendet" + vbCrLf
     End Sub
 
 #Region "form"
