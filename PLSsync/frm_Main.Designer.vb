@@ -27,6 +27,8 @@ Partial Class frm_Main
         Me.btn_UseSelectedDevice = New System.Windows.Forms.Button()
         Me.dgv_Devices = New System.Windows.Forms.DataGridView()
         Me.grp_Sync = New System.Windows.Forms.GroupBox()
+        Me.btn_Sync_Sync = New System.Windows.Forms.Button()
+        Me.txt_Log = New System.Windows.Forms.TextBox()
         Me.Button1 = New System.Windows.Forms.Button()
         Me.grp_PlaylistFiles = New System.Windows.Forms.GroupBox()
         Me.TableLayoutPanel1 = New System.Windows.Forms.TableLayoutPanel()
@@ -43,7 +45,7 @@ Partial Class frm_Main
         Me.txt_Sync_DeviceName = New System.Windows.Forms.TextBox()
         Me.lbl_Sync_DeviceName = New System.Windows.Forms.Label()
         Me.OpenFileDialog = New System.Windows.Forms.OpenFileDialog()
-        Me.txt_Log = New System.Windows.Forms.TextBox()
+        Me.prb_SyncPlaylists = New System.Windows.Forms.ProgressBar()
         Me.grp_Devices.SuspendLayout()
         CType(Me.dgv_Devices, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.grp_Sync.SuspendLayout()
@@ -107,6 +109,8 @@ Partial Class frm_Main
         Me.grp_Sync.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
             Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.grp_Sync.Controls.Add(Me.prb_SyncPlaylists)
+        Me.grp_Sync.Controls.Add(Me.btn_Sync_Sync)
         Me.grp_Sync.Controls.Add(Me.txt_Log)
         Me.grp_Sync.Controls.Add(Me.Button1)
         Me.grp_Sync.Controls.Add(Me.grp_PlaylistFiles)
@@ -117,6 +121,23 @@ Partial Class frm_Main
         Me.grp_Sync.TabIndex = 2
         Me.grp_Sync.TabStop = False
         Me.grp_Sync.Text = "Sync"
+        '
+        'btn_Sync_Sync
+        '
+        Me.btn_Sync_Sync.Location = New System.Drawing.Point(117, 163)
+        Me.btn_Sync_Sync.Name = "btn_Sync_Sync"
+        Me.btn_Sync_Sync.Size = New System.Drawing.Size(371, 23)
+        Me.btn_Sync_Sync.TabIndex = 4
+        Me.btn_Sync_Sync.Text = "Sync Playlists to Device"
+        Me.btn_Sync_Sync.UseVisualStyleBackColor = True
+        '
+        'txt_Log
+        '
+        Me.txt_Log.Location = New System.Drawing.Point(7, 247)
+        Me.txt_Log.Multiline = True
+        Me.txt_Log.Name = "txt_Log"
+        Me.txt_Log.Size = New System.Drawing.Size(967, 94)
+        Me.txt_Log.TabIndex = 3
         '
         'Button1
         '
@@ -284,13 +305,12 @@ Partial Class frm_Main
         Me.lbl_Sync_DeviceName.TabIndex = 0
         Me.lbl_Sync_DeviceName.Text = "Device Name:"
         '
-        'txt_Log
+        'prb_SyncPlaylists
         '
-        Me.txt_Log.Location = New System.Drawing.Point(7, 193)
-        Me.txt_Log.Multiline = True
-        Me.txt_Log.Name = "txt_Log"
-        Me.txt_Log.Size = New System.Drawing.Size(967, 148)
-        Me.txt_Log.TabIndex = 3
+        Me.prb_SyncPlaylists.Location = New System.Drawing.Point(117, 193)
+        Me.prb_SyncPlaylists.Name = "prb_SyncPlaylists"
+        Me.prb_SyncPlaylists.Size = New System.Drawing.Size(857, 23)
+        Me.prb_SyncPlaylists.TabIndex = 5
         '
         'frm_Main
         '
@@ -336,4 +356,6 @@ Partial Class frm_Main
     Friend WithEvents Button1 As Button
     Friend WithEvents txt_Sync_LocalMainMusicFolder As TextBox
     Friend WithEvents txt_Log As TextBox
+    Friend WithEvents btn_Sync_Sync As Button
+    Friend WithEvents prb_SyncPlaylists As ProgressBar
 End Class

@@ -11,6 +11,11 @@ Public Class frm_Main
 
     Public DeviceMainFolder As String = ""
 
+    Public WithEvents bgw_SyncPlaylist As New BackgroundWorker() With {
+        .WorkerReportsProgress = True,
+        .WorkerSupportsCancellation = True
+    }
+
     Private Sub refreshDevices()
         devices = MediaDevices.MediaDevice.GetDevices()
 
@@ -241,6 +246,46 @@ Public Class frm_Main
     Private Sub btn_PlaylistFiles_Remove_Click(sender As Object, e As EventArgs) Handles btn_PlaylistFiles_Remove.Click
         Dim selectedPlaylist As Playlist = dgv_PlaylistFiles.SelectedRows(0).DataBoundItem
         bs_PlaylistFiles.Remove(selectedPlaylist)
+    End Sub
+#End Region
+
+    Private Sub btn_Sync_Sync_Click(sender As Object, e As EventArgs) Handles btn_Sync_Sync.Click
+        bgw_SyncPlaylist.RunWorkerAsync()
+    End Sub
+
+#End Region
+
+
+#Region "Background Workers"
+
+#Region "bgw_SyncPlaylist"
+    Private Sub bgw_SyncPlaylist_DoWork(sender As Object, e As DoWorkEventArgs) Handles bgw_SyncPlaylist.DoWork
+        Dim playlist As Playlist
+        Dim track As Track
+
+        Dim allTracks As Integer = 0
+        Dim currentTrack As Integer = 0
+
+        ' get number of Tracks from all playlists
+        For Each playlist In preset.Playlists
+            playlist.read()
+            allTracks += playlist.Tracks.Count
+        Next
+
+        For Each playlist In preset.Playlists
+            For Each track In playlist.Tracks
+
+                currentTrack += 1
+                Debug.Print(currentTrack & "/" & allTracks & " - Playlist: " & playlist.Filename & ", Track: " & track.localPath)
+                'txt_Log.Text += currentTrack & "/" & allTracks & " - Playlist: " & playlist.Filename & ", Track: " & track.localPath & vbCrLf
+
+                bgw_SyncPlaylist.ReportProgress(currentTrack * 100 / allTracks)
+            Next
+        Next
+    End Sub
+
+    Private Sub bgw_SyncPlaylist_ProgressChanged(sender As Object, e As ProgressChangedEventArgs) Handles bgw_SyncPlaylist.ProgressChanged
+        prb_SyncPlaylists.Value = e.ProgressPercentage
     End Sub
 #End Region
 
