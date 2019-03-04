@@ -3,6 +3,7 @@
     Private _remotePath As String
     Private _hasCover As Boolean
     Private _coverFile As String
+    Private _preset As Preset
 
     Public Property localPath As String
         Get
@@ -10,7 +11,7 @@
         End Get
         Set(value As String)
             _localPath = value
-            _remotePath = Replace(value, frm_Main.preset.LocalMainPath, frm_Main.preset.RemoteMainPath)
+            _remotePath = Replace(value, _preset.LocalMainPath, _preset.RemoteMainPath)
 
             _localPathOnly = IO.Path.GetDirectoryName(value)
             _localFilenameOnly = IO.Path.GetFileName(value)
@@ -50,11 +51,21 @@
     End Sub
 
     Public Sub New(localPathIN As String)
+        Me._preset = frm_Main.preset
+        Me.localPath = localPathIN
+    End Sub
+
+    Public Sub New(localPathIN As String, preset As Preset)
+        Me._preset = preset
         Me.localPath = localPathIN
     End Sub
 
     Public Sub upload()
         Me.upload(Me.remotePath)
+    End Sub
+
+    Public Sub upload(toDevice As MediaDevices.MediaDevice)
+        Me.upload(toDevice, Me.remotePath)
     End Sub
 
     Public Sub upload(toPath As String)
@@ -76,28 +87,56 @@
         End If
     End Sub
 
-    Public Sub convert()
-        If (My.Computer.FileSystem.FileExists(My.Application.Info.DirectoryPath + "\tmp\converted.mp3") = True) Then
-            My.Computer.FileSystem.DeleteFile(My.Application.Info.DirectoryPath + "\tmp\converted.mp3")
+    Public Sub upload(toDevice As MediaDevices.MediaDevice, toPath As String)
+        If (toDevice.FileExists(Me.remotePath) = False) Then
+            If (toDevice.DirectoryExists(Me._remotePathOnly) = False) Then
+                toDevice.CreateDirectory(Me._remotePathOnly)
+            End If
+
+            Dim fs As New IO.FileStream(Me.localPath, IO.FileMode.Open, IO.FileAccess.Read)
+            toDevice.UploadFile(fs, toPath)
+
+            fs.Dispose()
         End If
 
-        'My.Computer.FileSystem.CopyFile(Me._localPath, My.Application.Info.DirectoryPath + "\tmp\converted.mp3")
 
-        ' LAME conversion
-        Dim lame As New Process()
+        If (Me.hasCover = True) Then
+            If (toDevice.FileExists(Me._remotePathOnly + "\" + Me.coverFile) = False) Then
+                Dim fs As New IO.FileStream(Me._localPathOnly + "\" + Me.coverFile, IO.FileMode.Open, IO.FileAccess.Read)
 
-        With lame.StartInfo
-            .FileName = My.Application.Info.DirectoryPath + "\lame\lame.exe"
-            ' TODO make arguments dynamic
-            .Arguments = "--nohist --preset medium """ + Me.localPath + """ """ + My.Application.Info.DirectoryPath + "\tmp\converted.mp3"""
+                toDevice.UploadFile(fs, _remotePathOnly + "\" + Me.coverFile)
 
-            .CreateNoWindow = True
-            .UseShellExecute = False
-        End With
+                fs.Dispose()
+            End If
+        End If
+    End Sub
 
-        lame.Start()
-        lame.WaitForExit()
+    Public Sub convert()
+        Try
+            If (My.Computer.FileSystem.FileExists(My.Application.Info.DirectoryPath + "\tmp\converted.mp3") = True) Then
+                My.Computer.FileSystem.DeleteFile(My.Application.Info.DirectoryPath + "\tmp\converted.mp3")
+            End If
 
-        Me._localPath = My.Application.Info.DirectoryPath + "\tmp\converted.mp3"
+            ' LAME conversion
+            Dim lame As New Process()
+
+            With lame.StartInfo
+                .FileName = My.Application.Info.DirectoryPath + "\lame\lame.exe"
+                ' TODO make arguments dynamic
+                .Arguments = "--nohist --preset medium """ + Me.localPath + """ """ + My.Application.Info.DirectoryPath + "\tmp\converted.mp3"""
+
+                .CreateNoWindow = True
+                .UseShellExecute = False
+            End With
+
+            lame.Start()
+            lame.WaitForExit()
+
+            lame.Dispose()
+
+            Me._localPath = My.Application.Info.DirectoryPath + "\tmp\converted.mp3"
+        Catch ex As Exception
+            Debug.Print("ERROR: Could not delete """ & My.Application.Info.DirectoryPath + "\tmp\converted.mp3""")
+        End Try
     End Sub
 End Class

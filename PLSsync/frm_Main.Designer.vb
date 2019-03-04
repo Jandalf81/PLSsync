@@ -133,11 +133,16 @@ Partial Class frm_Main
         '
         'txt_Log
         '
+        Me.txt_Log.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
+            Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.txt_Log.Location = New System.Drawing.Point(7, 247)
         Me.txt_Log.Multiline = True
         Me.txt_Log.Name = "txt_Log"
+        Me.txt_Log.ScrollBars = System.Windows.Forms.ScrollBars.Both
         Me.txt_Log.Size = New System.Drawing.Size(967, 94)
         Me.txt_Log.TabIndex = 3
+        Me.txt_Log.WordWrap = False
         '
         'Button1
         '

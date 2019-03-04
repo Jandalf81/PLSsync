@@ -5,6 +5,7 @@ Public Class frm_Main
 
     Public devices As IEnumerable(Of MediaDevices.MediaDevice)
     Public selectedDevice As MediaDevices.MediaDevice
+    Public storageInfo As MediaDevices.MediaStorageInfo
 
     Public bs_Devices As New BindingSource()
     Public bs_PlaylistFiles As New BindingSource()
@@ -162,6 +163,7 @@ Public Class frm_Main
 
         txt_Sync_DeviceName.Text = String.Format("{0}, {1}, {2}", selectedDevice.Manufacturer, selectedDevice.Description, selectedDevice.SerialNumber)
 
+        storageInfo = selectedDevice.GetStorageInfo(selectedDevice.FunctionalObjects(MediaDevices.FunctionalCategory.Storage).First())
         pic_Progress.Refresh()
 
         preset = New Preset()
@@ -188,8 +190,7 @@ Public Class frm_Main
         If selectedDevice Is Nothing Then
             e.Graphics.DrawRectangle(New Pen(Brushes.Gray, 1), 0, 0, pic_Progress.ClientSize.Width - 1, pic_Progress.ClientSize.Height - 1)
         Else
-            Dim objects = selectedDevice.FunctionalObjects(MediaDevices.FunctionalCategory.Storage)
-            Dim storageInfo As MediaDevices.MediaStorageInfo = selectedDevice.GetStorageInfo(objects.First())
+            'Dim storageInfo As MediaDevices.MediaStorageInfo = selectedDevice.GetStorageInfo(selectedDevice.FunctionalObjects(MediaDevices.FunctionalCategory.Storage).First())
 
             If storageInfo Is Nothing Then
                 e.Graphics.DrawString("n/a", Me.Font, Brushes.Black, pic_Progress.ClientRectangle, sf)
@@ -250,7 +251,7 @@ Public Class frm_Main
 #End Region
 
     Private Sub btn_Sync_Sync_Click(sender As Object, e As EventArgs) Handles btn_Sync_Sync.Click
-        bgw_SyncPlaylist.RunWorkerAsync()
+        bgw_SyncPlaylist.RunWorkerAsync(preset)
     End Sub
 
 #End Region
@@ -260,15 +261,12 @@ Public Class frm_Main
 
 #Region "bgw_SyncPlaylist"
     Private Sub bgw_SyncPlaylist_DoWork(sender As Object, e As DoWorkEventArgs) Handles bgw_SyncPlaylist.DoWork
-        Dim playlist As Playlist
-        Dim track As Track
-
         Dim allTracks As Integer = 0
         Dim currentTrack As Integer = 0
 
         ' get number of Tracks from all playlists
         For Each playlist In preset.Playlists
-            playlist.read()
+            playlist.read(preset)
             allTracks += playlist.Tracks.Count
         Next
 
@@ -277,15 +275,24 @@ Public Class frm_Main
 
                 currentTrack += 1
                 Debug.Print(currentTrack & "/" & allTracks & " - Playlist: " & playlist.Filename & ", Track: " & track.localPath)
-                'txt_Log.Text += currentTrack & "/" & allTracks & " - Playlist: " & playlist.Filename & ", Track: " & track.localPath & vbCrLf
 
-                bgw_SyncPlaylist.ReportProgress(currentTrack * 100 / allTracks)
+                bgw_SyncPlaylist.ReportProgress(currentTrack * 100 / allTracks, "INFO" & vbTab & currentTrack & "/" & allTracks & " - Playlist: " & playlist.Filename & ", Track: " & track.localPath)
+
+                bgw_SyncPlaylist.ReportProgress(currentTrack * 100 / allTracks, "INFO" & vbTab & "Converting...")
+                track.convert()
+                bgw_SyncPlaylist.ReportProgress(currentTrack * 100 / allTracks, "INFO" & vbTab & "Conversion OK")
+
+                bgw_SyncPlaylist.ReportProgress(currentTrack * 100 / allTracks, "INFO" & vbTab & "Uploading...")
+                track.upload(selectedDevice)
+                bgw_SyncPlaylist.ReportProgress(currentTrack * 100 / allTracks, "INFO" & vbTab & "Upload OK")
             Next
         Next
     End Sub
 
     Private Sub bgw_SyncPlaylist_ProgressChanged(sender As Object, e As ProgressChangedEventArgs) Handles bgw_SyncPlaylist.ProgressChanged
         prb_SyncPlaylists.Value = e.ProgressPercentage
+        txt_Log.AppendText(DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss") & vbTab & e.UserState & vbCrLf)
+        My.Application.DoEvents()
     End Sub
 #End Region
 
