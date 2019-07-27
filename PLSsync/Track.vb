@@ -111,7 +111,7 @@
         End If
     End Sub
 
-    Public Sub convert()
+    Public Sub convert(LAMEoptions As String)
         Try
             If (My.Computer.FileSystem.FileExists(My.Application.Info.DirectoryPath + "\tmp\converted.mp3") = True) Then
                 My.Computer.FileSystem.DeleteFile(My.Application.Info.DirectoryPath + "\tmp\converted.mp3")
@@ -123,7 +123,7 @@
             With lame.StartInfo
                 .FileName = My.Application.Info.DirectoryPath + "\lame\lame.exe"
                 ' TODO make arguments dynamic
-                .Arguments = "--nohist --preset medium """ + Me.localPath + """ """ + My.Application.Info.DirectoryPath + "\tmp\converted.mp3"""
+                .Arguments = LAMEoptions + " """ + Me.localPath + """ """ + My.Application.Info.DirectoryPath + "\tmp\converted.mp3"""
 
                 .CreateNoWindow = True
                 .UseShellExecute = False

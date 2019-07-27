@@ -56,7 +56,7 @@ Public Class frm_Main
         Dim t As New Track("E:\_PARsync\Chiptunes\Chipzel\Disconnected (2010)\01 - Something beautiful.mp3")
 
         txt_Log.Text += DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss: ") & "Starte Konvertierung..." + vbCrLf
-        t.convert()
+        t.convert(preset.LAMEoptions)
         txt_Log.Text += DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss: ") & "Konvertierung beendet" + vbCrLf
 
         txt_Log.Text += DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss: ") & "Starte Upload..." + vbCrLf
@@ -176,8 +176,12 @@ Public Class frm_Main
         preset = New Preset()
         preset.Load(selectedDevice.Description + "_" + selectedDevice.SerialNumber)
         bs_PlaylistFiles.DataSource = preset.Playlists
-        txt_Sync_MainMusicFolder_Local.Text = preset.RemoteMainPath
-        txt_Sync_MainMusicFolder_Remote.Text = preset.LocalMainPath
+        txt_Sync_MainMusicFolder_Local.Text = preset.LocalMainPath
+        txt_Sync_MainMusicFolder_Remote.Text = preset.RemoteMainPath
+        chk_Sync_EmbedCover.Checked = preset.EmbedCover
+        chk_Sync_Convert.Checked = preset.Convert
+        txt_Sync_LAMEoptions.Text = preset.LAMEoptions
+        txt_Sync_LAMEoptions.Enabled = preset.Convert ' Only enable the text field if the chekbox is checkes
 
         grp_Sync.Enabled = True
     End Sub
@@ -232,7 +236,6 @@ Public Class frm_Main
     End Sub
 
     Private Sub btn_SetMainMusicFolder_Click(sender As Object, e As EventArgs) Handles btn_SetMainMusicFolder_Local.Click
-        ' TODO create a way to set the main folder
         With FolderBrowserDialog
             .RootFolder = System.Environment.SpecialFolder.MyComputer
             .ShowNewFolderButton = False
@@ -241,7 +244,22 @@ Public Class frm_Main
 
         If (FolderBrowserDialog.ShowDialog() = DialogResult.OK) Then
             txt_Sync_MainMusicFolder_Local.Text = FolderBrowserDialog.SelectedPath
+            preset.LocalMainPath = FolderBrowserDialog.SelectedPath
         End If
+    End Sub
+
+    Private Sub chk_Sync_EmbedCover_CheckedChanged(sender As Object, e As EventArgs) Handles chk_Sync_EmbedCover.CheckedChanged
+        preset.EmbedCover = chk_Sync_EmbedCover.Checked
+    End Sub
+
+    Private Sub chk_Sync_Convert_CheckedChanged(sender As Object, e As EventArgs) Handles chk_Sync_Convert.CheckedChanged
+        ' TODO insert check if LAME.EXE exists
+        preset.Convert = chk_Sync_Convert.Checked
+        txt_Sync_LAMEoptions.Enabled = chk_Sync_Convert.Checked  ' Only enable the text field if the chekbox is checkes
+    End Sub
+
+    Private Sub txt_Sync_LAMEoptions_TextChanged(sender As Object, e As EventArgs) Handles txt_Sync_LAMEoptions.TextChanged
+        preset.LAMEoptions = txt_Sync_LAMEoptions.Text
     End Sub
 #End Region
 
@@ -267,6 +285,7 @@ Public Class frm_Main
 #End Region
 
     Private Sub btn_Sync_Sync_Click(sender As Object, e As EventArgs) Handles btn_Sync_Sync.Click
+        preset.Save(selectedDevice.Description + "_" + selectedDevice.SerialNumber)
         bgw_SyncPlaylist.RunWorkerAsync(preset)
     End Sub
 
@@ -294,9 +313,11 @@ Public Class frm_Main
 
                 bgw_SyncPlaylist.ReportProgress(currentTrack * 100 / allTracks, "INFO" & vbTab & currentTrack & "/" & allTracks & " - Playlist: " & playlist.Filename & ", Track: " & track.localPath)
 
-                bgw_SyncPlaylist.ReportProgress(currentTrack * 100 / allTracks, "INFO" & vbTab & "Converting...")
-                track.convert()
-                bgw_SyncPlaylist.ReportProgress(currentTrack * 100 / allTracks, "INFO" & vbTab & "Conversion OK")
+                If (preset.Convert = True) Then
+                    bgw_SyncPlaylist.ReportProgress(currentTrack * 100 / allTracks, "INFO" & vbTab & "Converting...")
+                    track.convert(preset.LAMEoptions)
+                    bgw_SyncPlaylist.ReportProgress(currentTrack * 100 / allTracks, "INFO" & vbTab & "Conversion OK")
+                End If
 
                 bgw_SyncPlaylist.ReportProgress(currentTrack * 100 / allTracks, "INFO" & vbTab & "Uploading...")
                 track.upload(selectedDevice)

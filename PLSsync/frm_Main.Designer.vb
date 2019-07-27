@@ -49,6 +49,10 @@ Partial Class frm_Main
         Me.lbl_Sync_DeviceName = New System.Windows.Forms.Label()
         Me.OpenFileDialog = New System.Windows.Forms.OpenFileDialog()
         Me.FolderBrowserDialog = New System.Windows.Forms.FolderBrowserDialog()
+        Me.chk_Sync_EmbedCover = New System.Windows.Forms.CheckBox()
+        Me.lbl_Sync_LAMEoptions = New System.Windows.Forms.Label()
+        Me.txt_Sync_LAMEoptions = New System.Windows.Forms.TextBox()
+        Me.chk_Sync_Convert = New System.Windows.Forms.CheckBox()
         Me.grp_Devices.SuspendLayout()
         CType(Me.dgv_Devices, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.grp_Sync.SuspendLayout()
@@ -120,21 +124,21 @@ Partial Class frm_Main
         Me.grp_Sync.Controls.Add(Me.grp_SelectedDevice)
         Me.grp_Sync.Location = New System.Drawing.Point(12, 219)
         Me.grp_Sync.Name = "grp_Sync"
-        Me.grp_Sync.Size = New System.Drawing.Size(980, 347)
+        Me.grp_Sync.Size = New System.Drawing.Size(980, 445)
         Me.grp_Sync.TabIndex = 2
         Me.grp_Sync.TabStop = False
         Me.grp_Sync.Text = "Sync"
         '
         'prb_SyncPlaylists
         '
-        Me.prb_SyncPlaylists.Location = New System.Drawing.Point(117, 193)
+        Me.prb_SyncPlaylists.Location = New System.Drawing.Point(117, 289)
         Me.prb_SyncPlaylists.Name = "prb_SyncPlaylists"
         Me.prb_SyncPlaylists.Size = New System.Drawing.Size(857, 23)
         Me.prb_SyncPlaylists.TabIndex = 5
         '
         'btn_Sync_Sync
         '
-        Me.btn_Sync_Sync.Location = New System.Drawing.Point(117, 163)
+        Me.btn_Sync_Sync.Location = New System.Drawing.Point(117, 260)
         Me.btn_Sync_Sync.Name = "btn_Sync_Sync"
         Me.btn_Sync_Sync.Size = New System.Drawing.Size(371, 23)
         Me.btn_Sync_Sync.TabIndex = 4
@@ -146,17 +150,17 @@ Partial Class frm_Main
         Me.txt_Log.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
             Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.txt_Log.Location = New System.Drawing.Point(7, 247)
+        Me.txt_Log.Location = New System.Drawing.Point(7, 333)
         Me.txt_Log.Multiline = True
         Me.txt_Log.Name = "txt_Log"
         Me.txt_Log.ScrollBars = System.Windows.Forms.ScrollBars.Both
-        Me.txt_Log.Size = New System.Drawing.Size(967, 94)
+        Me.txt_Log.Size = New System.Drawing.Size(967, 106)
         Me.txt_Log.TabIndex = 3
         Me.txt_Log.WordWrap = False
         '
         'Button1
         '
-        Me.Button1.Location = New System.Drawing.Point(6, 163)
+        Me.Button1.Location = New System.Drawing.Point(6, 260)
         Me.Button1.Name = "Button1"
         Me.Button1.Size = New System.Drawing.Size(75, 23)
         Me.Button1.TabIndex = 2
@@ -171,7 +175,7 @@ Partial Class frm_Main
         Me.grp_PlaylistFiles.Controls.Add(Me.dgv_PlaylistFiles)
         Me.grp_PlaylistFiles.Location = New System.Drawing.Point(494, 19)
         Me.grp_PlaylistFiles.Name = "grp_PlaylistFiles"
-        Me.grp_PlaylistFiles.Size = New System.Drawing.Size(480, 154)
+        Me.grp_PlaylistFiles.Size = New System.Drawing.Size(480, 212)
         Me.grp_PlaylistFiles.TabIndex = 1
         Me.grp_PlaylistFiles.TabStop = False
         Me.grp_PlaylistFiles.Text = "Playlist files"
@@ -185,7 +189,7 @@ Partial Class frm_Main
         Me.TableLayoutPanel1.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50.0!))
         Me.TableLayoutPanel1.Controls.Add(Me.btn_PlaylistFiles_Add, 0, 0)
         Me.TableLayoutPanel1.Controls.Add(Me.btn_PlaylistFiles_Remove, 1, 0)
-        Me.TableLayoutPanel1.Location = New System.Drawing.Point(6, 110)
+        Me.TableLayoutPanel1.Location = New System.Drawing.Point(6, 168)
         Me.TableLayoutPanel1.Name = "TableLayoutPanel1"
         Me.TableLayoutPanel1.RowCount = 1
         Me.TableLayoutPanel1.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50.0!))
@@ -227,11 +231,15 @@ Partial Class frm_Main
         Me.dgv_PlaylistFiles.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
         Me.dgv_PlaylistFiles.Location = New System.Drawing.Point(6, 19)
         Me.dgv_PlaylistFiles.Name = "dgv_PlaylistFiles"
-        Me.dgv_PlaylistFiles.Size = New System.Drawing.Size(468, 85)
+        Me.dgv_PlaylistFiles.Size = New System.Drawing.Size(468, 143)
         Me.dgv_PlaylistFiles.TabIndex = 0
         '
         'grp_SelectedDevice
         '
+        Me.grp_SelectedDevice.Controls.Add(Me.chk_Sync_Convert)
+        Me.grp_SelectedDevice.Controls.Add(Me.txt_Sync_LAMEoptions)
+        Me.grp_SelectedDevice.Controls.Add(Me.lbl_Sync_LAMEoptions)
+        Me.grp_SelectedDevice.Controls.Add(Me.chk_Sync_EmbedCover)
         Me.grp_SelectedDevice.Controls.Add(Me.btn_SetMainMusicFolder_Remote)
         Me.grp_SelectedDevice.Controls.Add(Me.lbl_Sync_MainMusicFolder_Remote)
         Me.grp_SelectedDevice.Controls.Add(Me.txt_Sync_MainMusicFolder_Remote)
@@ -244,7 +252,7 @@ Partial Class frm_Main
         Me.grp_SelectedDevice.Controls.Add(Me.lbl_Sync_DeviceName)
         Me.grp_SelectedDevice.Location = New System.Drawing.Point(6, 19)
         Me.grp_SelectedDevice.Name = "grp_SelectedDevice"
-        Me.grp_SelectedDevice.Size = New System.Drawing.Size(481, 138)
+        Me.grp_SelectedDevice.Size = New System.Drawing.Size(481, 212)
         Me.grp_SelectedDevice.TabIndex = 0
         Me.grp_SelectedDevice.TabStop = False
         Me.grp_SelectedDevice.Text = "selected Device"
@@ -272,6 +280,7 @@ Partial Class frm_Main
         '
         Me.txt_Sync_MainMusicFolder_Remote.Location = New System.Drawing.Point(144, 97)
         Me.txt_Sync_MainMusicFolder_Remote.Name = "txt_Sync_MainMusicFolder_Remote"
+        Me.txt_Sync_MainMusicFolder_Remote.ReadOnly = True
         Me.txt_Sync_MainMusicFolder_Remote.Size = New System.Drawing.Size(300, 20)
         Me.txt_Sync_MainMusicFolder_Remote.TabIndex = 9
         '
@@ -347,11 +356,47 @@ Partial Class frm_Main
         Me.FolderBrowserDialog.RootFolder = System.Environment.SpecialFolder.MyComputer
         Me.FolderBrowserDialog.ShowNewFolderButton = False
         '
+        'chk_Sync_EmbedCover
+        '
+        Me.chk_Sync_EmbedCover.AutoSize = True
+        Me.chk_Sync_EmbedCover.Location = New System.Drawing.Point(144, 123)
+        Me.chk_Sync_EmbedCover.Name = "chk_Sync_EmbedCover"
+        Me.chk_Sync_EmbedCover.Size = New System.Drawing.Size(90, 17)
+        Me.chk_Sync_EmbedCover.TabIndex = 12
+        Me.chk_Sync_EmbedCover.Text = "Embed Cover"
+        Me.chk_Sync_EmbedCover.UseVisualStyleBackColor = True
+        '
+        'lbl_Sync_LAMEoptions
+        '
+        Me.lbl_Sync_LAMEoptions.AutoSize = True
+        Me.lbl_Sync_LAMEoptions.Location = New System.Drawing.Point(7, 172)
+        Me.lbl_Sync_LAMEoptions.Name = "lbl_Sync_LAMEoptions"
+        Me.lbl_Sync_LAMEoptions.Size = New System.Drawing.Size(75, 13)
+        Me.lbl_Sync_LAMEoptions.TabIndex = 13
+        Me.lbl_Sync_LAMEoptions.Text = "LAME Options"
+        '
+        'txt_Sync_LAMEoptions
+        '
+        Me.txt_Sync_LAMEoptions.Location = New System.Drawing.Point(144, 169)
+        Me.txt_Sync_LAMEoptions.Name = "txt_Sync_LAMEoptions"
+        Me.txt_Sync_LAMEoptions.Size = New System.Drawing.Size(331, 20)
+        Me.txt_Sync_LAMEoptions.TabIndex = 14
+        '
+        'chk_Sync_Convert
+        '
+        Me.chk_Sync_Convert.AutoSize = True
+        Me.chk_Sync_Convert.Location = New System.Drawing.Point(144, 146)
+        Me.chk_Sync_Convert.Name = "chk_Sync_Convert"
+        Me.chk_Sync_Convert.Size = New System.Drawing.Size(117, 17)
+        Me.chk_Sync_Convert.TabIndex = 15
+        Me.chk_Sync_Convert.Text = "Convert with LAME"
+        Me.chk_Sync_Convert.UseVisualStyleBackColor = True
+        '
         'frm_Main
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
-        Me.ClientSize = New System.Drawing.Size(1004, 578)
+        Me.ClientSize = New System.Drawing.Size(1004, 676)
         Me.Controls.Add(Me.grp_Sync)
         Me.Controls.Add(Me.grp_Devices)
         Me.Name = "frm_Main"
@@ -396,4 +441,8 @@ Partial Class frm_Main
     Friend WithEvents FolderBrowserDialog As FolderBrowserDialog
     Friend WithEvents lbl_Sync_MainMusicFolder_Remote As Label
     Friend WithEvents btn_SetMainMusicFolder_Remote As Button
+    Friend WithEvents txt_Sync_LAMEoptions As TextBox
+    Friend WithEvents lbl_Sync_LAMEoptions As Label
+    Friend WithEvents chk_Sync_EmbedCover As CheckBox
+    Friend WithEvents chk_Sync_Convert As CheckBox
 End Class

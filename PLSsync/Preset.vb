@@ -4,6 +4,9 @@ Public Class Preset
     Private _localMainPath As String
     Private _remoteMainPath As String
     Private _Playlists As New List(Of Playlist)
+    Private _embedCover As Boolean
+    Private _convert As Boolean
+    Private _LAMEoptions As String
 
     Public Property LocalMainPath As String
         Get
@@ -29,6 +32,30 @@ Public Class Preset
             _Playlists = value
         End Set
     End Property
+    Public Property EmbedCover As Boolean
+        Get
+            Return _embedCover
+        End Get
+        Set(value As Boolean)
+            _embedCover = value
+        End Set
+    End Property
+    Public Property Convert As Boolean
+        Get
+            Return _convert
+        End Get
+        Set(value As Boolean)
+            _convert = value
+        End Set
+    End Property
+    Public Property LAMEoptions As String
+        Get
+            Return _LAMEoptions
+        End Get
+        Set(value As String)
+            _LAMEoptions = value
+        End Set
+    End Property
 
     Public Sub New()
     End Sub
@@ -47,7 +74,7 @@ Public Class Preset
     End Sub
 
     Public Sub Load(myPreset As String)
-        Dim ISettings As New Preset()
+        Dim IPreset As New Preset()
         Dim x As New Xml.Serialization.XmlSerializer(Me.GetType)
 
         If Not (My.Computer.FileSystem.DirectoryExists(My.Application.Info.DirectoryPath + "\presets\")) Then
@@ -56,12 +83,15 @@ Public Class Preset
 
         If (My.Computer.FileSystem.FileExists(My.Application.Info.DirectoryPath + "\presets\" + myPreset + ".xml")) Then
             Using fs As New IO.FileStream(My.Application.Info.DirectoryPath + "\presets\" + myPreset + ".xml", IO.FileMode.Open)
-                ISettings = x.Deserialize(fs)
+                IPreset = x.Deserialize(fs)
             End Using
         End If
 
-        Me._localMainPath = ISettings.LocalMainPath
-        Me._remoteMainPath = ISettings.RemoteMainPath
-        Me.Playlists = ISettings.Playlists
+        Me._localMainPath = IPreset.LocalMainPath
+        Me._remoteMainPath = IPreset.RemoteMainPath
+        Me.Playlists = IPreset.Playlists
+        Me._embedCover = IPreset.EmbedCover
+        Me._convert = IPreset.Convert
+        Me._LAMEoptions = IPreset.LAMEoptions
     End Sub
 End Class
