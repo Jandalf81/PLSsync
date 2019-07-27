@@ -27,6 +27,7 @@ Partial Class frm_Main
         Me.btn_UseSelectedDevice = New System.Windows.Forms.Button()
         Me.dgv_Devices = New System.Windows.Forms.DataGridView()
         Me.grp_Sync = New System.Windows.Forms.GroupBox()
+        Me.prb_SyncPlaylists = New System.Windows.Forms.ProgressBar()
         Me.btn_Sync_Sync = New System.Windows.Forms.Button()
         Me.txt_Log = New System.Windows.Forms.TextBox()
         Me.Button1 = New System.Windows.Forms.Button()
@@ -36,16 +37,18 @@ Partial Class frm_Main
         Me.btn_PlaylistFiles_Remove = New System.Windows.Forms.Button()
         Me.dgv_PlaylistFiles = New System.Windows.Forms.DataGridView()
         Me.grp_SelectedDevice = New System.Windows.Forms.GroupBox()
-        Me.txt_Sync_LocalMainMusicFolder = New System.Windows.Forms.TextBox()
-        Me.btn_SetMainMusicFolder = New System.Windows.Forms.Button()
-        Me.txt_Sync_MainMusicFolder = New System.Windows.Forms.TextBox()
-        Me.lbl_Sync_MainMusicFolder = New System.Windows.Forms.Label()
+        Me.btn_SetMainMusicFolder_Remote = New System.Windows.Forms.Button()
+        Me.lbl_Sync_MainMusicFolder_Remote = New System.Windows.Forms.Label()
+        Me.txt_Sync_MainMusicFolder_Remote = New System.Windows.Forms.TextBox()
+        Me.btn_SetMainMusicFolder_Local = New System.Windows.Forms.Button()
+        Me.txt_Sync_MainMusicFolder_Local = New System.Windows.Forms.TextBox()
+        Me.lbl_Sync_MainMusicFolder_Local = New System.Windows.Forms.Label()
         Me.pic_Progress = New System.Windows.Forms.PictureBox()
         Me.lbl_Sync_StorageInfo = New System.Windows.Forms.Label()
         Me.txt_Sync_DeviceName = New System.Windows.Forms.TextBox()
         Me.lbl_Sync_DeviceName = New System.Windows.Forms.Label()
         Me.OpenFileDialog = New System.Windows.Forms.OpenFileDialog()
-        Me.prb_SyncPlaylists = New System.Windows.Forms.ProgressBar()
+        Me.FolderBrowserDialog = New System.Windows.Forms.FolderBrowserDialog()
         Me.grp_Devices.SuspendLayout()
         CType(Me.dgv_Devices, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.grp_Sync.SuspendLayout()
@@ -122,6 +125,13 @@ Partial Class frm_Main
         Me.grp_Sync.TabStop = False
         Me.grp_Sync.Text = "Sync"
         '
+        'prb_SyncPlaylists
+        '
+        Me.prb_SyncPlaylists.Location = New System.Drawing.Point(117, 193)
+        Me.prb_SyncPlaylists.Name = "prb_SyncPlaylists"
+        Me.prb_SyncPlaylists.Size = New System.Drawing.Size(857, 23)
+        Me.prb_SyncPlaylists.TabIndex = 5
+        '
         'btn_Sync_Sync
         '
         Me.btn_Sync_Sync.Location = New System.Drawing.Point(117, 163)
@@ -155,6 +165,8 @@ Partial Class frm_Main
         '
         'grp_PlaylistFiles
         '
+        Me.grp_PlaylistFiles.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.grp_PlaylistFiles.Controls.Add(Me.TableLayoutPanel1)
         Me.grp_PlaylistFiles.Controls.Add(Me.dgv_PlaylistFiles)
         Me.grp_PlaylistFiles.Location = New System.Drawing.Point(494, 19)
@@ -220,12 +232,12 @@ Partial Class frm_Main
         '
         'grp_SelectedDevice
         '
-        Me.grp_SelectedDevice.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
-            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.grp_SelectedDevice.Controls.Add(Me.txt_Sync_LocalMainMusicFolder)
-        Me.grp_SelectedDevice.Controls.Add(Me.btn_SetMainMusicFolder)
-        Me.grp_SelectedDevice.Controls.Add(Me.txt_Sync_MainMusicFolder)
-        Me.grp_SelectedDevice.Controls.Add(Me.lbl_Sync_MainMusicFolder)
+        Me.grp_SelectedDevice.Controls.Add(Me.btn_SetMainMusicFolder_Remote)
+        Me.grp_SelectedDevice.Controls.Add(Me.lbl_Sync_MainMusicFolder_Remote)
+        Me.grp_SelectedDevice.Controls.Add(Me.txt_Sync_MainMusicFolder_Remote)
+        Me.grp_SelectedDevice.Controls.Add(Me.btn_SetMainMusicFolder_Local)
+        Me.grp_SelectedDevice.Controls.Add(Me.txt_Sync_MainMusicFolder_Local)
+        Me.grp_SelectedDevice.Controls.Add(Me.lbl_Sync_MainMusicFolder_Local)
         Me.grp_SelectedDevice.Controls.Add(Me.pic_Progress)
         Me.grp_SelectedDevice.Controls.Add(Me.lbl_Sync_StorageInfo)
         Me.grp_SelectedDevice.Controls.Add(Me.txt_Sync_DeviceName)
@@ -237,48 +249,68 @@ Partial Class frm_Main
         Me.grp_SelectedDevice.TabStop = False
         Me.grp_SelectedDevice.Text = "selected Device"
         '
-        'txt_Sync_LocalMainMusicFolder
+        'btn_SetMainMusicFolder_Remote
         '
-        Me.txt_Sync_LocalMainMusicFolder.Location = New System.Drawing.Point(111, 97)
-        Me.txt_Sync_LocalMainMusicFolder.Name = "txt_Sync_LocalMainMusicFolder"
-        Me.txt_Sync_LocalMainMusicFolder.Size = New System.Drawing.Size(333, 20)
-        Me.txt_Sync_LocalMainMusicFolder.TabIndex = 9
+        Me.btn_SetMainMusicFolder_Remote.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.btn_SetMainMusicFolder_Remote.Image = Global.PLSsync.My.Resources.Resources.folder
+        Me.btn_SetMainMusicFolder_Remote.Location = New System.Drawing.Point(450, 94)
+        Me.btn_SetMainMusicFolder_Remote.Name = "btn_SetMainMusicFolder_Remote"
+        Me.btn_SetMainMusicFolder_Remote.Size = New System.Drawing.Size(25, 25)
+        Me.btn_SetMainMusicFolder_Remote.TabIndex = 11
+        Me.btn_SetMainMusicFolder_Remote.UseVisualStyleBackColor = True
         '
-        'btn_SetMainMusicFolder
+        'lbl_Sync_MainMusicFolder_Remote
         '
-        Me.btn_SetMainMusicFolder.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.btn_SetMainMusicFolder.Image = Global.PLSsync.My.Resources.Resources.folder
-        Me.btn_SetMainMusicFolder.Location = New System.Drawing.Point(450, 67)
-        Me.btn_SetMainMusicFolder.Name = "btn_SetMainMusicFolder"
-        Me.btn_SetMainMusicFolder.Size = New System.Drawing.Size(25, 25)
-        Me.btn_SetMainMusicFolder.TabIndex = 8
-        Me.btn_SetMainMusicFolder.UseVisualStyleBackColor = True
+        Me.lbl_Sync_MainMusicFolder_Remote.AutoSize = True
+        Me.lbl_Sync_MainMusicFolder_Remote.Location = New System.Drawing.Point(7, 100)
+        Me.lbl_Sync_MainMusicFolder_Remote.Name = "lbl_Sync_MainMusicFolder_Remote"
+        Me.lbl_Sync_MainMusicFolder_Remote.Size = New System.Drawing.Size(136, 13)
+        Me.lbl_Sync_MainMusicFolder_Remote.TabIndex = 10
+        Me.lbl_Sync_MainMusicFolder_Remote.Text = "Remote Main Music Folder:"
         '
-        'txt_Sync_MainMusicFolder
+        'txt_Sync_MainMusicFolder_Remote
         '
-        Me.txt_Sync_MainMusicFolder.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+        Me.txt_Sync_MainMusicFolder_Remote.Location = New System.Drawing.Point(144, 97)
+        Me.txt_Sync_MainMusicFolder_Remote.Name = "txt_Sync_MainMusicFolder_Remote"
+        Me.txt_Sync_MainMusicFolder_Remote.Size = New System.Drawing.Size(300, 20)
+        Me.txt_Sync_MainMusicFolder_Remote.TabIndex = 9
+        '
+        'btn_SetMainMusicFolder_Local
+        '
+        Me.btn_SetMainMusicFolder_Local.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.btn_SetMainMusicFolder_Local.Image = Global.PLSsync.My.Resources.Resources.folder
+        Me.btn_SetMainMusicFolder_Local.Location = New System.Drawing.Point(450, 67)
+        Me.btn_SetMainMusicFolder_Local.Name = "btn_SetMainMusicFolder_Local"
+        Me.btn_SetMainMusicFolder_Local.Size = New System.Drawing.Size(25, 25)
+        Me.btn_SetMainMusicFolder_Local.TabIndex = 8
+        Me.btn_SetMainMusicFolder_Local.UseVisualStyleBackColor = True
+        '
+        'txt_Sync_MainMusicFolder_Local
+        '
+        Me.txt_Sync_MainMusicFolder_Local.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.txt_Sync_MainMusicFolder.Location = New System.Drawing.Point(111, 70)
-        Me.txt_Sync_MainMusicFolder.Name = "txt_Sync_MainMusicFolder"
-        Me.txt_Sync_MainMusicFolder.Size = New System.Drawing.Size(333, 20)
-        Me.txt_Sync_MainMusicFolder.TabIndex = 7
+        Me.txt_Sync_MainMusicFolder_Local.Location = New System.Drawing.Point(144, 70)
+        Me.txt_Sync_MainMusicFolder_Local.Name = "txt_Sync_MainMusicFolder_Local"
+        Me.txt_Sync_MainMusicFolder_Local.ReadOnly = True
+        Me.txt_Sync_MainMusicFolder_Local.Size = New System.Drawing.Size(300, 20)
+        Me.txt_Sync_MainMusicFolder_Local.TabIndex = 7
         '
-        'lbl_Sync_MainMusicFolder
+        'lbl_Sync_MainMusicFolder_Local
         '
-        Me.lbl_Sync_MainMusicFolder.AutoSize = True
-        Me.lbl_Sync_MainMusicFolder.Location = New System.Drawing.Point(7, 73)
-        Me.lbl_Sync_MainMusicFolder.Name = "lbl_Sync_MainMusicFolder"
-        Me.lbl_Sync_MainMusicFolder.Size = New System.Drawing.Size(93, 13)
-        Me.lbl_Sync_MainMusicFolder.TabIndex = 6
-        Me.lbl_Sync_MainMusicFolder.Text = "Main Music folder:"
+        Me.lbl_Sync_MainMusicFolder_Local.AutoSize = True
+        Me.lbl_Sync_MainMusicFolder_Local.Location = New System.Drawing.Point(7, 73)
+        Me.lbl_Sync_MainMusicFolder_Local.Name = "lbl_Sync_MainMusicFolder_Local"
+        Me.lbl_Sync_MainMusicFolder_Local.Size = New System.Drawing.Size(125, 13)
+        Me.lbl_Sync_MainMusicFolder_Local.TabIndex = 6
+        Me.lbl_Sync_MainMusicFolder_Local.Text = "Local Main Music Folder:"
         '
         'pic_Progress
         '
         Me.pic_Progress.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.pic_Progress.Location = New System.Drawing.Point(111, 43)
+        Me.pic_Progress.Location = New System.Drawing.Point(144, 43)
         Me.pic_Progress.Name = "pic_Progress"
-        Me.pic_Progress.Size = New System.Drawing.Size(364, 20)
+        Me.pic_Progress.Size = New System.Drawing.Size(331, 20)
         Me.pic_Progress.TabIndex = 5
         Me.pic_Progress.TabStop = False
         '
@@ -295,10 +327,10 @@ Partial Class frm_Main
         '
         Me.txt_Sync_DeviceName.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.txt_Sync_DeviceName.Location = New System.Drawing.Point(111, 17)
+        Me.txt_Sync_DeviceName.Location = New System.Drawing.Point(144, 17)
         Me.txt_Sync_DeviceName.Name = "txt_Sync_DeviceName"
         Me.txt_Sync_DeviceName.ReadOnly = True
-        Me.txt_Sync_DeviceName.Size = New System.Drawing.Size(364, 20)
+        Me.txt_Sync_DeviceName.Size = New System.Drawing.Size(331, 20)
         Me.txt_Sync_DeviceName.TabIndex = 1
         '
         'lbl_Sync_DeviceName
@@ -310,12 +342,10 @@ Partial Class frm_Main
         Me.lbl_Sync_DeviceName.TabIndex = 0
         Me.lbl_Sync_DeviceName.Text = "Device Name:"
         '
-        'prb_SyncPlaylists
+        'FolderBrowserDialog
         '
-        Me.prb_SyncPlaylists.Location = New System.Drawing.Point(117, 193)
-        Me.prb_SyncPlaylists.Name = "prb_SyncPlaylists"
-        Me.prb_SyncPlaylists.Size = New System.Drawing.Size(857, 23)
-        Me.prb_SyncPlaylists.TabIndex = 5
+        Me.FolderBrowserDialog.RootFolder = System.Environment.SpecialFolder.MyComputer
+        Me.FolderBrowserDialog.ShowNewFolderButton = False
         '
         'frm_Main
         '
@@ -349,9 +379,9 @@ Partial Class frm_Main
     Friend WithEvents txt_Sync_DeviceName As TextBox
     Friend WithEvents lbl_Sync_StorageInfo As Label
     Friend WithEvents pic_Progress As PictureBox
-    Friend WithEvents btn_SetMainMusicFolder As Button
-    Friend WithEvents txt_Sync_MainMusicFolder As TextBox
-    Friend WithEvents lbl_Sync_MainMusicFolder As Label
+    Friend WithEvents btn_SetMainMusicFolder_Local As Button
+    Friend WithEvents txt_Sync_MainMusicFolder_Local As TextBox
+    Friend WithEvents lbl_Sync_MainMusicFolder_Local As Label
     Friend WithEvents grp_PlaylistFiles As GroupBox
     Friend WithEvents TableLayoutPanel1 As TableLayoutPanel
     Friend WithEvents btn_PlaylistFiles_Add As Button
@@ -359,8 +389,11 @@ Partial Class frm_Main
     Friend WithEvents dgv_PlaylistFiles As DataGridView
     Friend WithEvents OpenFileDialog As OpenFileDialog
     Friend WithEvents Button1 As Button
-    Friend WithEvents txt_Sync_LocalMainMusicFolder As TextBox
+    Friend WithEvents txt_Sync_MainMusicFolder_Remote As TextBox
     Friend WithEvents txt_Log As TextBox
     Friend WithEvents btn_Sync_Sync As Button
     Friend WithEvents prb_SyncPlaylists As ProgressBar
+    Friend WithEvents FolderBrowserDialog As FolderBrowserDialog
+    Friend WithEvents lbl_Sync_MainMusicFolder_Remote As Label
+    Friend WithEvents btn_SetMainMusicFolder_Remote As Button
 End Class

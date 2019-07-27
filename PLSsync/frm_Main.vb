@@ -135,6 +135,8 @@ Public Class frm_Main
         bs_PlaylistFiles.DataSource = preset.Playlists
 
         refreshDevices()
+
+        grp_Sync.Enabled = False
     End Sub
 
     Private Sub frm_Main_Resize(sender As Object, e As EventArgs) Handles Me.Resize
@@ -163,14 +165,21 @@ Public Class frm_Main
 
         txt_Sync_DeviceName.Text = String.Format("{0}, {1}, {2}", selectedDevice.Manufacturer, selectedDevice.Description, selectedDevice.SerialNumber)
 
-        storageInfo = selectedDevice.GetStorageInfo(selectedDevice.FunctionalObjects(MediaDevices.FunctionalCategory.Storage).First())
+        Try
+            storageInfo = selectedDevice.GetStorageInfo(selectedDevice.FunctionalObjects(MediaDevices.FunctionalCategory.Storage).First())
+        Catch ex As Exception
+            MsgBox(ex.Message)
+        End Try
+
         pic_Progress.Refresh()
 
         preset = New Preset()
         preset.Load(selectedDevice.Description + "_" + selectedDevice.SerialNumber)
         bs_PlaylistFiles.DataSource = preset.Playlists
-        txt_Sync_MainMusicFolder.Text = preset.RemoteMainPath
-        txt_Sync_LocalMainMusicFolder.Text = preset.LocalMainPath
+        txt_Sync_MainMusicFolder_Local.Text = preset.RemoteMainPath
+        txt_Sync_MainMusicFolder_Remote.Text = preset.LocalMainPath
+
+        grp_Sync.Enabled = True
     End Sub
 #End Region
 
@@ -222,20 +231,27 @@ Public Class frm_Main
         End If
     End Sub
 
-    Private Sub btn_SetMainMusicFolder_Click(sender As Object, e As EventArgs) Handles btn_SetMainMusicFolder.Click
+    Private Sub btn_SetMainMusicFolder_Click(sender As Object, e As EventArgs) Handles btn_SetMainMusicFolder_Local.Click
         ' TODO create a way to set the main folder
-    End Sub
+        With FolderBrowserDialog
+            .RootFolder = System.Environment.SpecialFolder.MyComputer
+            .ShowNewFolderButton = False
+            .Description = "Set main folder for your local music"
+        End With
 
-    Private Sub txt_Sync_MainMusicFolder_TextChanged(sender As Object, e As EventArgs) Handles txt_Sync_MainMusicFolder.TextChanged
-        preset.RemoteMainPath = txt_Sync_MainMusicFolder.Text
+        If (FolderBrowserDialog.ShowDialog() = DialogResult.OK) Then
+            txt_Sync_MainMusicFolder_Local.Text = FolderBrowserDialog.SelectedPath
+        End If
     End Sub
 #End Region
 
 #Region "form grp_Sync grp_Playlists"
     Private Sub btn_PlaylistFiles_Add_Click(sender As Object, e As EventArgs) Handles btn_PlaylistFiles_Add.Click
-        OpenFileDialog.Filter = "playlist files (*.m3u, *.m3u8)|*.m3u;*.m3u8"
-        OpenFileDialog.Multiselect = False
-        OpenFileDialog.Title = "Add Playlist File"
+        With OpenFileDialog
+            .Filter = "playlist files (*.m3u, *.m3u8)|*.m3u;*.m3u8"
+            .Multiselect = False
+            .Title = "Add Playlist File"
+        End With
 
         If (OpenFileDialog.ShowDialog() = DialogResult.OK) Then
             Dim pl As New Playlist(OpenFileDialog.FileName)
