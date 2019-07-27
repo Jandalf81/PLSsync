@@ -30,13 +30,16 @@ Partial Class frm_Main
         Me.prb_SyncPlaylists = New System.Windows.Forms.ProgressBar()
         Me.btn_Sync_Sync = New System.Windows.Forms.Button()
         Me.txt_Log = New System.Windows.Forms.TextBox()
-        Me.Button1 = New System.Windows.Forms.Button()
         Me.grp_PlaylistFiles = New System.Windows.Forms.GroupBox()
         Me.TableLayoutPanel1 = New System.Windows.Forms.TableLayoutPanel()
         Me.btn_PlaylistFiles_Add = New System.Windows.Forms.Button()
         Me.btn_PlaylistFiles_Remove = New System.Windows.Forms.Button()
         Me.dgv_PlaylistFiles = New System.Windows.Forms.DataGridView()
         Me.grp_SelectedDevice = New System.Windows.Forms.GroupBox()
+        Me.chk_Sync_Convert = New System.Windows.Forms.CheckBox()
+        Me.txt_Sync_LAMEoptions = New System.Windows.Forms.TextBox()
+        Me.lbl_Sync_LAMEoptions = New System.Windows.Forms.Label()
+        Me.chk_Sync_EmbedCover = New System.Windows.Forms.CheckBox()
         Me.btn_SetMainMusicFolder_Remote = New System.Windows.Forms.Button()
         Me.lbl_Sync_MainMusicFolder_Remote = New System.Windows.Forms.Label()
         Me.txt_Sync_MainMusicFolder_Remote = New System.Windows.Forms.TextBox()
@@ -49,10 +52,6 @@ Partial Class frm_Main
         Me.lbl_Sync_DeviceName = New System.Windows.Forms.Label()
         Me.OpenFileDialog = New System.Windows.Forms.OpenFileDialog()
         Me.FolderBrowserDialog = New System.Windows.Forms.FolderBrowserDialog()
-        Me.chk_Sync_EmbedCover = New System.Windows.Forms.CheckBox()
-        Me.lbl_Sync_LAMEoptions = New System.Windows.Forms.Label()
-        Me.txt_Sync_LAMEoptions = New System.Windows.Forms.TextBox()
-        Me.chk_Sync_Convert = New System.Windows.Forms.CheckBox()
         Me.grp_Devices.SuspendLayout()
         CType(Me.dgv_Devices, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.grp_Sync.SuspendLayout()
@@ -119,7 +118,6 @@ Partial Class frm_Main
         Me.grp_Sync.Controls.Add(Me.prb_SyncPlaylists)
         Me.grp_Sync.Controls.Add(Me.btn_Sync_Sync)
         Me.grp_Sync.Controls.Add(Me.txt_Log)
-        Me.grp_Sync.Controls.Add(Me.Button1)
         Me.grp_Sync.Controls.Add(Me.grp_PlaylistFiles)
         Me.grp_Sync.Controls.Add(Me.grp_SelectedDevice)
         Me.grp_Sync.Location = New System.Drawing.Point(12, 219)
@@ -157,15 +155,6 @@ Partial Class frm_Main
         Me.txt_Log.Size = New System.Drawing.Size(967, 106)
         Me.txt_Log.TabIndex = 3
         Me.txt_Log.WordWrap = False
-        '
-        'Button1
-        '
-        Me.Button1.Location = New System.Drawing.Point(6, 260)
-        Me.Button1.Name = "Button1"
-        Me.Button1.Size = New System.Drawing.Size(75, 23)
-        Me.Button1.TabIndex = 2
-        Me.Button1.Text = "Button1"
-        Me.Button1.UseVisualStyleBackColor = True
         '
         'grp_PlaylistFiles
         '
@@ -256,6 +245,42 @@ Partial Class frm_Main
         Me.grp_SelectedDevice.TabIndex = 0
         Me.grp_SelectedDevice.TabStop = False
         Me.grp_SelectedDevice.Text = "selected Device"
+        '
+        'chk_Sync_Convert
+        '
+        Me.chk_Sync_Convert.AutoSize = True
+        Me.chk_Sync_Convert.Location = New System.Drawing.Point(144, 146)
+        Me.chk_Sync_Convert.Name = "chk_Sync_Convert"
+        Me.chk_Sync_Convert.Size = New System.Drawing.Size(117, 17)
+        Me.chk_Sync_Convert.TabIndex = 15
+        Me.chk_Sync_Convert.Text = "Convert with LAME"
+        Me.chk_Sync_Convert.UseVisualStyleBackColor = True
+        '
+        'txt_Sync_LAMEoptions
+        '
+        Me.txt_Sync_LAMEoptions.Location = New System.Drawing.Point(144, 169)
+        Me.txt_Sync_LAMEoptions.Name = "txt_Sync_LAMEoptions"
+        Me.txt_Sync_LAMEoptions.Size = New System.Drawing.Size(331, 20)
+        Me.txt_Sync_LAMEoptions.TabIndex = 14
+        '
+        'lbl_Sync_LAMEoptions
+        '
+        Me.lbl_Sync_LAMEoptions.AutoSize = True
+        Me.lbl_Sync_LAMEoptions.Location = New System.Drawing.Point(7, 172)
+        Me.lbl_Sync_LAMEoptions.Name = "lbl_Sync_LAMEoptions"
+        Me.lbl_Sync_LAMEoptions.Size = New System.Drawing.Size(75, 13)
+        Me.lbl_Sync_LAMEoptions.TabIndex = 13
+        Me.lbl_Sync_LAMEoptions.Text = "LAME Options"
+        '
+        'chk_Sync_EmbedCover
+        '
+        Me.chk_Sync_EmbedCover.AutoSize = True
+        Me.chk_Sync_EmbedCover.Location = New System.Drawing.Point(144, 123)
+        Me.chk_Sync_EmbedCover.Name = "chk_Sync_EmbedCover"
+        Me.chk_Sync_EmbedCover.Size = New System.Drawing.Size(90, 17)
+        Me.chk_Sync_EmbedCover.TabIndex = 12
+        Me.chk_Sync_EmbedCover.Text = "Embed Cover"
+        Me.chk_Sync_EmbedCover.UseVisualStyleBackColor = True
         '
         'btn_SetMainMusicFolder_Remote
         '
@@ -356,42 +381,6 @@ Partial Class frm_Main
         Me.FolderBrowserDialog.RootFolder = System.Environment.SpecialFolder.MyComputer
         Me.FolderBrowserDialog.ShowNewFolderButton = False
         '
-        'chk_Sync_EmbedCover
-        '
-        Me.chk_Sync_EmbedCover.AutoSize = True
-        Me.chk_Sync_EmbedCover.Location = New System.Drawing.Point(144, 123)
-        Me.chk_Sync_EmbedCover.Name = "chk_Sync_EmbedCover"
-        Me.chk_Sync_EmbedCover.Size = New System.Drawing.Size(90, 17)
-        Me.chk_Sync_EmbedCover.TabIndex = 12
-        Me.chk_Sync_EmbedCover.Text = "Embed Cover"
-        Me.chk_Sync_EmbedCover.UseVisualStyleBackColor = True
-        '
-        'lbl_Sync_LAMEoptions
-        '
-        Me.lbl_Sync_LAMEoptions.AutoSize = True
-        Me.lbl_Sync_LAMEoptions.Location = New System.Drawing.Point(7, 172)
-        Me.lbl_Sync_LAMEoptions.Name = "lbl_Sync_LAMEoptions"
-        Me.lbl_Sync_LAMEoptions.Size = New System.Drawing.Size(75, 13)
-        Me.lbl_Sync_LAMEoptions.TabIndex = 13
-        Me.lbl_Sync_LAMEoptions.Text = "LAME Options"
-        '
-        'txt_Sync_LAMEoptions
-        '
-        Me.txt_Sync_LAMEoptions.Location = New System.Drawing.Point(144, 169)
-        Me.txt_Sync_LAMEoptions.Name = "txt_Sync_LAMEoptions"
-        Me.txt_Sync_LAMEoptions.Size = New System.Drawing.Size(331, 20)
-        Me.txt_Sync_LAMEoptions.TabIndex = 14
-        '
-        'chk_Sync_Convert
-        '
-        Me.chk_Sync_Convert.AutoSize = True
-        Me.chk_Sync_Convert.Location = New System.Drawing.Point(144, 146)
-        Me.chk_Sync_Convert.Name = "chk_Sync_Convert"
-        Me.chk_Sync_Convert.Size = New System.Drawing.Size(117, 17)
-        Me.chk_Sync_Convert.TabIndex = 15
-        Me.chk_Sync_Convert.Text = "Convert with LAME"
-        Me.chk_Sync_Convert.UseVisualStyleBackColor = True
-        '
         'frm_Main
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -433,7 +422,6 @@ Partial Class frm_Main
     Friend WithEvents btn_PlaylistFiles_Remove As Button
     Friend WithEvents dgv_PlaylistFiles As DataGridView
     Friend WithEvents OpenFileDialog As OpenFileDialog
-    Friend WithEvents Button1 As Button
     Friend WithEvents txt_Sync_MainMusicFolder_Remote As TextBox
     Friend WithEvents txt_Log As TextBox
     Friend WithEvents btn_Sync_Sync As Button

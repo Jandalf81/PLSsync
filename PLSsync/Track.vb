@@ -60,32 +60,32 @@
         Me.localPath = localPathIN
     End Sub
 
-    Public Sub upload()
-        Me.upload(Me.remotePath)
-    End Sub
+    'Public Sub upload()
+    '    Me.upload(Me.remotePath)
+    'End Sub
 
     Public Sub upload(toDevice As MediaDevices.MediaDevice)
         Me.upload(toDevice, Me.remotePath)
     End Sub
 
-    Public Sub upload(toPath As String)
-        If (frm_Main.selectedDevice.FileExists(Me.remotePath) = False) Then
-            If (frm_Main.selectedDevice.DirectoryExists(Me._remotePathOnly) = False) Then
-                frm_Main.selectedDevice.CreateDirectory(Me._remotePathOnly)
-            End If
+    'Public Sub upload(toPath As String)
+    '    If (frm_Main.selectedDevice.FileExists(Me.remotePath) = False) Then
+    '        If (frm_Main.selectedDevice.DirectoryExists(Me._remotePathOnly) = False) Then
+    '            frm_Main.selectedDevice.CreateDirectory(Me._remotePathOnly)
+    '        End If
 
-            Dim fs As New IO.FileStream(Me.localPath, IO.FileMode.Open, IO.FileAccess.Read)
-            frm_Main.selectedDevice.UploadFile(fs, toPath)
-        End If
+    '        Dim fs As New IO.FileStream(Me.localPath, IO.FileMode.Open, IO.FileAccess.Read)
+    '        frm_Main.selectedDevice.UploadFile(fs, toPath)
+    '    End If
 
-        If (Me.hasCover = True) Then
-            If (frm_Main.selectedDevice.FileExists(Me._remotePathOnly + "\" + Me.coverFile) = False) Then
-                Dim fs As New IO.FileStream(Me._localPathOnly + "\" + Me.coverFile, IO.FileMode.Open, IO.FileAccess.Read)
+    '    If (Me.hasCover = True) Then
+    '        If (frm_Main.selectedDevice.FileExists(Me._remotePathOnly + "\" + Me.coverFile) = False) Then
+    '            Dim fs As New IO.FileStream(Me._localPathOnly + "\" + Me.coverFile, IO.FileMode.Open, IO.FileAccess.Read)
 
-                frm_Main.selectedDevice.UploadFile(fs, _remotePathOnly + "\" + Me.coverFile)
-            End If
-        End If
-    End Sub
+    '            frm_Main.selectedDevice.UploadFile(fs, _remotePathOnly + "\" + Me.coverFile)
+    '        End If
+    '    End If
+    'End Sub
 
     Public Sub upload(toDevice As MediaDevices.MediaDevice, toPath As String)
         If (toDevice.FileExists(Me.remotePath) = False) Then
@@ -138,5 +138,30 @@
         Catch ex As Exception
             Debug.Print("ERROR: Could not delete """ & My.Application.Info.DirectoryPath + "\tmp\converted.mp3""")
         End Try
+    End Sub
+
+    Public Sub embedCover()
+        TagLib.Id3v2.Tag.DefaultVersion = 3
+        TagLib.Id3v2.Tag.ForceDefaultVersion = True
+
+        Dim mp3 As TagLib.File = TagLib.File.Create(Me._localPath)
+        Dim cover As New TagLib.Id3v2.AttachedPictureFrame()
+        Dim image As Image = Image.FromFile(Me._localPathOnly + "\" + Me.coverFile)
+        Dim imgByte As Byte()
+
+        ' convert image file to byte array
+        Dim imgCon As New ImageConverter()
+        imgByte = DirectCast(imgCon.ConvertTo(image, GetType(Byte())), Byte())
+
+        ' add byte array to mp3 tag
+        cover.Type = TagLib.PictureType.FrontCover
+        cover.Data = imgByte
+        cover.TextEncoding = TagLib.StringType.UTF16
+
+        mp3.Tag.Pictures = New TagLib.IPicture() {cover}
+
+        ' save mp3 file
+        mp3.Save()
+        mp3.Dispose()
     End Sub
 End Class

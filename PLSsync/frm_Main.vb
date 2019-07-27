@@ -52,17 +52,17 @@ Public Class frm_Main
         Next
     End Sub
 
-    Private Sub Button1_Click_1(sender As Object, e As EventArgs) Handles Button1.Click
-        Dim t As New Track("E:\_PARsync\Chiptunes\Chipzel\Disconnected (2010)\01 - Something beautiful.mp3")
+    'Private Sub Button1_Click_1(sender As Object, e As EventArgs) Handles Button1.Click
+    '    Dim t As New Track("E:\_PARsync\Chiptunes\Chipzel\Disconnected (2010)\01 - Something beautiful.mp3")
 
-        txt_Log.Text += DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss: ") & "Starte Konvertierung..." + vbCrLf
-        t.convert(preset.LAMEoptions)
-        txt_Log.Text += DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss: ") & "Konvertierung beendet" + vbCrLf
+    '    txt_Log.Text += DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss: ") & "Starte Konvertierung..." + vbCrLf
+    '    t.convert(preset.LAMEoptions)
+    '    txt_Log.Text += DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss: ") & "Konvertierung beendet" + vbCrLf
 
-        txt_Log.Text += DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss: ") & "Starte Upload..." + vbCrLf
-        t.upload()
-        txt_Log.Text += DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss: ") & "Upload beendet" + vbCrLf
-    End Sub
+    '    txt_Log.Text += DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss: ") & "Starte Upload..." + vbCrLf
+    '    t.upload()
+    '    txt_Log.Text += DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss: ") & "Upload beendet" + vbCrLf
+    'End Sub
 
 #Region "form"
     Private Sub frm_Main_Load(sender As Object, e As EventArgs) Handles Me.Load
@@ -144,8 +144,14 @@ Public Class frm_Main
     End Sub
 
     Private Sub frm_Main_Closing(sender As Object, e As CancelEventArgs) Handles Me.Closing
+        ' save current preset
         If (Not selectedDevice Is Nothing) Then
             preset.Save(selectedDevice.Description + "_" + selectedDevice.SerialNumber)
+        End If
+
+        ' remove temporary files
+        If (My.Computer.FileSystem.FileExists(My.Application.Info.DirectoryPath + "\tmp\converted.mp3") = True) Then
+            My.Computer.FileSystem.DeleteFile(My.Application.Info.DirectoryPath + "\tmp\converted.mp3")
         End If
     End Sub
 #End Region
@@ -313,15 +319,23 @@ Public Class frm_Main
 
                 bgw_SyncPlaylist.ReportProgress(currentTrack * 100 / allTracks, "INFO" & vbTab & currentTrack & "/" & allTracks & " - Playlist: " & playlist.Filename & ", Track: " & track.localPath)
 
-                If (preset.Convert = True) Then
-                    bgw_SyncPlaylist.ReportProgress(currentTrack * 100 / allTracks, "INFO" & vbTab & "Converting...")
-                    track.convert(preset.LAMEoptions)
-                    bgw_SyncPlaylist.ReportProgress(currentTrack * 100 / allTracks, "INFO" & vbTab & "Conversion OK")
-                End If
+                If (selectedDevice.FileExists(track.remotePath) = False) Then
+                    If (preset.Convert = True) Then
+                        bgw_SyncPlaylist.ReportProgress(currentTrack * 100 / allTracks, "INFO" & vbTab & "Converting...")
+                        track.convert(preset.LAMEoptions)
+                        bgw_SyncPlaylist.ReportProgress(currentTrack * 100 / allTracks, "INFO" & vbTab & "Conversion OK")
+                    End If
 
-                bgw_SyncPlaylist.ReportProgress(currentTrack * 100 / allTracks, "INFO" & vbTab & "Uploading...")
-                track.upload(selectedDevice)
-                bgw_SyncPlaylist.ReportProgress(currentTrack * 100 / allTracks, "INFO" & vbTab & "Upload OK")
+                    If (preset.EmbedCover = True) Then
+                        track.embedCover()
+                    End If
+
+                    bgw_SyncPlaylist.ReportProgress(currentTrack * 100 / allTracks, "INFO" & vbTab & "Uploading...")
+                    track.upload(selectedDevice)
+                    bgw_SyncPlaylist.ReportProgress(currentTrack * 100 / allTracks, "INFO" & vbTab & "Upload OK")
+                Else
+                    bgw_SyncPlaylist.ReportProgress(currentTrack * 100 / allTracks, "INFO" & vbTab & "File exists")
+                End If
             Next
         Next
     End Sub
