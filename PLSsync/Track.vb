@@ -1,5 +1,6 @@
 ﻿Public Class Track
     Private _localPath As String
+    Private _localPathOriginal As String
     Private _remotePath As String
     Private _hasCover As Boolean
     Private _coverFile As String
@@ -11,6 +12,7 @@
         End Get
         Set(value As String)
             _localPath = value
+            _localPathOriginal = value
             _remotePath = Replace(value, _preset.LocalMainPath, _preset.RemoteMainPath)
 
             _localPathOnly = IO.Path.GetDirectoryName(value)
@@ -21,11 +23,19 @@
                 Case My.Computer.FileSystem.FileExists(_localPathOnly + "\folder.jpg") = True
                     _hasCover = True
                     _coverFile = "folder.jpg"
+                Case My.Computer.FileSystem.FileExists(_localPathOnly + "\folder.png") = True
+                    _hasCover = True
+                    _coverFile = "folder.png"
                 Case Else
                     _hasCover = False
                     _coverFile = ""
             End Select
         End Set
+    End Property
+    Public ReadOnly Property LocalPathOriginal As String
+        Get
+            Return _localPathOriginal
+        End Get
     End Property
     Public ReadOnly Property remotePath As String
         Get
@@ -113,18 +123,16 @@
 
     Public Sub convert(LAMEoptions As String)
         Try
-            If (My.Computer.FileSystem.FileExists(My.Application.Info.DirectoryPath + "\tmp\converted.mp3") = True) Then
-                My.Computer.FileSystem.DeleteFile(My.Application.Info.DirectoryPath + "\tmp\converted.mp3")
-            End If
+            'If (My.Computer.FileSystem.FileExists(My.Application.Info.DirectoryPath + "\tmp\converted.mp3") = True) Then
+            '    My.Computer.FileSystem.DeleteFile(My.Application.Info.DirectoryPath + "\tmp\converted.mp3")
+            'End If
 
             ' LAME conversion
             Dim lame As New Process()
 
             With lame.StartInfo
                 .FileName = My.Application.Info.DirectoryPath + "\lame\lame.exe"
-                ' TODO make arguments dynamic
                 .Arguments = LAMEoptions + " """ + Me.localPath + """ """ + My.Application.Info.DirectoryPath + "\tmp\converted.mp3"""
-
                 .CreateNoWindow = True
                 .UseShellExecute = False
             End With
@@ -143,6 +151,10 @@
     Public Sub embedCover()
         TagLib.Id3v2.Tag.DefaultVersion = 3
         TagLib.Id3v2.Tag.ForceDefaultVersion = True
+
+        ' copy file to embed cover in
+        FileCopy(Me._localPath, My.Application.Info.DirectoryPath + "\tmp\embedCover.mp3")
+        Me._localPath = My.Application.Info.DirectoryPath + "\tmp\embedCover.mp3"
 
         Dim mp3 As TagLib.File = TagLib.File.Create(Me._localPath)
         Dim cover As New TagLib.Id3v2.AttachedPictureFrame()

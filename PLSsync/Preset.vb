@@ -7,6 +7,8 @@ Public Class Preset
     Private _embedCover As Boolean
     Private _convert As Boolean
     Private _LAMEoptions As String
+    Private _syncPlaylists As Boolean
+    Private _createPlaylistOnSync As Boolean
 
     Public Property LocalMainPath As String
         Get
@@ -56,6 +58,22 @@ Public Class Preset
             _LAMEoptions = value
         End Set
     End Property
+    Public Property SyncPlaylists As Boolean
+        Get
+            Return _syncPlaylists
+        End Get
+        Set(value As Boolean)
+            _syncPlaylists = value
+        End Set
+    End Property
+    Public Property CreatePlaylistOnSync As Boolean
+        Get
+            Return _createPlaylistOnSync
+        End Get
+        Set(value As Boolean)
+            _createPlaylistOnSync = value
+        End Set
+    End Property
 
     Public Sub New()
     End Sub
@@ -89,9 +107,11 @@ Public Class Preset
 
         Me._localMainPath = IPreset.LocalMainPath
         Me._remoteMainPath = IPreset.RemoteMainPath
-        Me.Playlists = IPreset.Playlists
+        Me._Playlists = IPreset.Playlists
         Me._embedCover = IPreset.EmbedCover
         Me._convert = IPreset.Convert
         Me._LAMEoptions = IPreset.LAMEoptions
+        Me._syncPlaylists = IPreset.SyncPlaylists
+        Me._createPlaylistOnSync = IPreset.CreatePlaylistOnSync
     End Sub
 End Class

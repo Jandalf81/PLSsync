@@ -28,6 +28,16 @@ Public Class frm_Main
         dgv_Devices.DataSource = bs_Devices
     End Sub
 
+    Private Sub tidyUp()
+        If (My.Computer.FileSystem.FileExists(My.Application.Info.DirectoryPath + "\tmp\converted.mp3") = True) Then
+            My.Computer.FileSystem.DeleteFile(My.Application.Info.DirectoryPath + "\tmp\converted.mp3")
+        End If
+
+        If (My.Computer.FileSystem.FileExists(My.Application.Info.DirectoryPath + "\tmp\embedCover.mp3") = True) Then
+            My.Computer.FileSystem.DeleteFile(My.Application.Info.DirectoryPath + "\tmp\embedCover.mp3")
+        End If
+    End Sub
+
     Private Sub Button1_Click(sender As Object, e As EventArgs)
         Dim devices As IEnumerable(Of MediaDevices.MediaDevice) = MediaDevices.MediaDevice.GetDevices()
 
@@ -150,9 +160,7 @@ Public Class frm_Main
         End If
 
         ' remove temporary files
-        If (My.Computer.FileSystem.FileExists(My.Application.Info.DirectoryPath + "\tmp\converted.mp3") = True) Then
-            My.Computer.FileSystem.DeleteFile(My.Application.Info.DirectoryPath + "\tmp\converted.mp3")
-        End If
+        tidyUp()
     End Sub
 #End Region
 
@@ -314,6 +322,8 @@ Public Class frm_Main
         For Each playlist In preset.Playlists
             For Each track In playlist.Tracks
 
+                ' TODO put log in table format
+
                 currentTrack += 1
                 Debug.Print(currentTrack & "/" & allTracks & " - Playlist: " & playlist.Filename & ", Track: " & track.localPath)
 
@@ -336,6 +346,8 @@ Public Class frm_Main
                 Else
                     bgw_SyncPlaylist.ReportProgress(currentTrack * 100 / allTracks, "INFO" & vbTab & "File exists")
                 End If
+
+                tidyUp()
             Next
         Next
     End Sub

@@ -30,11 +30,9 @@ Partial Class frm_Main
         Me.prb_SyncPlaylists = New System.Windows.Forms.ProgressBar()
         Me.btn_Sync_Sync = New System.Windows.Forms.Button()
         Me.txt_Log = New System.Windows.Forms.TextBox()
-        Me.grp_PlaylistFiles = New System.Windows.Forms.GroupBox()
-        Me.TableLayoutPanel1 = New System.Windows.Forms.TableLayoutPanel()
-        Me.btn_PlaylistFiles_Add = New System.Windows.Forms.Button()
-        Me.btn_PlaylistFiles_Remove = New System.Windows.Forms.Button()
-        Me.dgv_PlaylistFiles = New System.Windows.Forms.DataGridView()
+        Me.OpenFileDialog = New System.Windows.Forms.OpenFileDialog()
+        Me.FolderBrowserDialog = New System.Windows.Forms.FolderBrowserDialog()
+        Me.TableLayoutPanel2 = New System.Windows.Forms.TableLayoutPanel()
         Me.grp_SelectedDevice = New System.Windows.Forms.GroupBox()
         Me.chk_Sync_Convert = New System.Windows.Forms.CheckBox()
         Me.txt_Sync_LAMEoptions = New System.Windows.Forms.TextBox()
@@ -50,16 +48,20 @@ Partial Class frm_Main
         Me.lbl_Sync_StorageInfo = New System.Windows.Forms.Label()
         Me.txt_Sync_DeviceName = New System.Windows.Forms.TextBox()
         Me.lbl_Sync_DeviceName = New System.Windows.Forms.Label()
-        Me.OpenFileDialog = New System.Windows.Forms.OpenFileDialog()
-        Me.FolderBrowserDialog = New System.Windows.Forms.FolderBrowserDialog()
+        Me.grp_PlaylistFiles = New System.Windows.Forms.GroupBox()
+        Me.TableLayoutPanel1 = New System.Windows.Forms.TableLayoutPanel()
+        Me.btn_PlaylistFiles_Add = New System.Windows.Forms.Button()
+        Me.btn_PlaylistFiles_Remove = New System.Windows.Forms.Button()
+        Me.dgv_PlaylistFiles = New System.Windows.Forms.DataGridView()
         Me.grp_Devices.SuspendLayout()
         CType(Me.dgv_Devices, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.grp_Sync.SuspendLayout()
+        Me.TableLayoutPanel2.SuspendLayout()
+        Me.grp_SelectedDevice.SuspendLayout()
+        CType(Me.pic_Progress, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.grp_PlaylistFiles.SuspendLayout()
         Me.TableLayoutPanel1.SuspendLayout()
         CType(Me.dgv_PlaylistFiles, System.ComponentModel.ISupportInitialize).BeginInit()
-        Me.grp_SelectedDevice.SuspendLayout()
-        CType(Me.pic_Progress, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
         '
         'grp_Devices
@@ -80,10 +82,13 @@ Partial Class frm_Main
         '
         Me.btn_RefreshDevices.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.btn_RefreshDevices.Image = Global.PLSsync.My.Resources.Resources.arrow_refresh
-        Me.btn_RefreshDevices.Location = New System.Drawing.Point(936, 155)
+        Me.btn_RefreshDevices.Location = New System.Drawing.Point(827, 155)
         Me.btn_RefreshDevices.Name = "btn_RefreshDevices"
-        Me.btn_RefreshDevices.Size = New System.Drawing.Size(38, 38)
+        Me.btn_RefreshDevices.Size = New System.Drawing.Size(147, 38)
         Me.btn_RefreshDevices.TabIndex = 2
+        Me.btn_RefreshDevices.Text = "Refresh Device List"
+        Me.btn_RefreshDevices.TextAlign = System.Drawing.ContentAlignment.MiddleRight
+        Me.btn_RefreshDevices.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText
         Me.btn_RefreshDevices.UseVisualStyleBackColor = True
         '
         'btn_UseSelectedDevice
@@ -93,7 +98,7 @@ Partial Class frm_Main
         Me.btn_UseSelectedDevice.Image = Global.PLSsync.My.Resources.Resources.accept
         Me.btn_UseSelectedDevice.Location = New System.Drawing.Point(6, 155)
         Me.btn_UseSelectedDevice.Name = "btn_UseSelectedDevice"
-        Me.btn_UseSelectedDevice.Size = New System.Drawing.Size(924, 38)
+        Me.btn_UseSelectedDevice.Size = New System.Drawing.Size(815, 38)
         Me.btn_UseSelectedDevice.TabIndex = 1
         Me.btn_UseSelectedDevice.Text = "use selected device"
         Me.btn_UseSelectedDevice.TextAlign = System.Drawing.ContentAlignment.MiddleRight
@@ -115,11 +120,10 @@ Partial Class frm_Main
         Me.grp_Sync.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
             Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.grp_Sync.Controls.Add(Me.TableLayoutPanel2)
         Me.grp_Sync.Controls.Add(Me.prb_SyncPlaylists)
         Me.grp_Sync.Controls.Add(Me.btn_Sync_Sync)
         Me.grp_Sync.Controls.Add(Me.txt_Log)
-        Me.grp_Sync.Controls.Add(Me.grp_PlaylistFiles)
-        Me.grp_Sync.Controls.Add(Me.grp_SelectedDevice)
         Me.grp_Sync.Location = New System.Drawing.Point(12, 219)
         Me.grp_Sync.Name = "grp_Sync"
         Me.grp_Sync.Size = New System.Drawing.Size(980, 445)
@@ -129,18 +133,25 @@ Partial Class frm_Main
         '
         'prb_SyncPlaylists
         '
-        Me.prb_SyncPlaylists.Location = New System.Drawing.Point(117, 289)
+        Me.prb_SyncPlaylists.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.prb_SyncPlaylists.Location = New System.Drawing.Point(7, 349)
         Me.prb_SyncPlaylists.Name = "prb_SyncPlaylists"
-        Me.prb_SyncPlaylists.Size = New System.Drawing.Size(857, 23)
+        Me.prb_SyncPlaylists.Size = New System.Drawing.Size(967, 23)
         Me.prb_SyncPlaylists.TabIndex = 5
         '
         'btn_Sync_Sync
         '
-        Me.btn_Sync_Sync.Location = New System.Drawing.Point(117, 260)
+        Me.btn_Sync_Sync.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.btn_Sync_Sync.Image = Global.PLSsync.My.Resources.Resources.arrow_refresh
+        Me.btn_Sync_Sync.Location = New System.Drawing.Point(7, 308)
         Me.btn_Sync_Sync.Name = "btn_Sync_Sync"
-        Me.btn_Sync_Sync.Size = New System.Drawing.Size(371, 23)
+        Me.btn_Sync_Sync.Size = New System.Drawing.Size(967, 38)
         Me.btn_Sync_Sync.TabIndex = 4
         Me.btn_Sync_Sync.Text = "Sync Playlists to Device"
+        Me.btn_Sync_Sync.TextAlign = System.Drawing.ContentAlignment.MiddleRight
+        Me.btn_Sync_Sync.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText
         Me.btn_Sync_Sync.UseVisualStyleBackColor = True
         '
         'txt_Log
@@ -148,83 +159,39 @@ Partial Class frm_Main
         Me.txt_Log.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
             Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.txt_Log.Location = New System.Drawing.Point(7, 333)
+        Me.txt_Log.Location = New System.Drawing.Point(7, 378)
         Me.txt_Log.Multiline = True
         Me.txt_Log.Name = "txt_Log"
         Me.txt_Log.ScrollBars = System.Windows.Forms.ScrollBars.Both
-        Me.txt_Log.Size = New System.Drawing.Size(967, 106)
+        Me.txt_Log.Size = New System.Drawing.Size(967, 61)
         Me.txt_Log.TabIndex = 3
         Me.txt_Log.WordWrap = False
         '
-        'grp_PlaylistFiles
+        'FolderBrowserDialog
         '
-        Me.grp_PlaylistFiles.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+        Me.FolderBrowserDialog.RootFolder = System.Environment.SpecialFolder.MyComputer
+        Me.FolderBrowserDialog.ShowNewFolderButton = False
+        '
+        'TableLayoutPanel2
+        '
+        Me.TableLayoutPanel2.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.grp_PlaylistFiles.Controls.Add(Me.TableLayoutPanel1)
-        Me.grp_PlaylistFiles.Controls.Add(Me.dgv_PlaylistFiles)
-        Me.grp_PlaylistFiles.Location = New System.Drawing.Point(494, 19)
-        Me.grp_PlaylistFiles.Name = "grp_PlaylistFiles"
-        Me.grp_PlaylistFiles.Size = New System.Drawing.Size(480, 212)
-        Me.grp_PlaylistFiles.TabIndex = 1
-        Me.grp_PlaylistFiles.TabStop = False
-        Me.grp_PlaylistFiles.Text = "Playlist files"
-        '
-        'TableLayoutPanel1
-        '
-        Me.TableLayoutPanel1.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
-            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.TableLayoutPanel1.ColumnCount = 2
-        Me.TableLayoutPanel1.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50.0!))
-        Me.TableLayoutPanel1.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50.0!))
-        Me.TableLayoutPanel1.Controls.Add(Me.btn_PlaylistFiles_Add, 0, 0)
-        Me.TableLayoutPanel1.Controls.Add(Me.btn_PlaylistFiles_Remove, 1, 0)
-        Me.TableLayoutPanel1.Location = New System.Drawing.Point(6, 168)
-        Me.TableLayoutPanel1.Name = "TableLayoutPanel1"
-        Me.TableLayoutPanel1.RowCount = 1
-        Me.TableLayoutPanel1.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50.0!))
-        Me.TableLayoutPanel1.Size = New System.Drawing.Size(468, 38)
-        Me.TableLayoutPanel1.TabIndex = 1
-        '
-        'btn_PlaylistFiles_Add
-        '
-        Me.btn_PlaylistFiles_Add.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.btn_PlaylistFiles_Add.Image = Global.PLSsync.My.Resources.Resources.add
-        Me.btn_PlaylistFiles_Add.Location = New System.Drawing.Point(0, 0)
-        Me.btn_PlaylistFiles_Add.Margin = New System.Windows.Forms.Padding(0, 0, 3, 0)
-        Me.btn_PlaylistFiles_Add.Name = "btn_PlaylistFiles_Add"
-        Me.btn_PlaylistFiles_Add.Size = New System.Drawing.Size(231, 38)
-        Me.btn_PlaylistFiles_Add.TabIndex = 0
-        Me.btn_PlaylistFiles_Add.Text = "add Playlist File"
-        Me.btn_PlaylistFiles_Add.TextAlign = System.Drawing.ContentAlignment.MiddleRight
-        Me.btn_PlaylistFiles_Add.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText
-        Me.btn_PlaylistFiles_Add.UseVisualStyleBackColor = True
-        '
-        'btn_PlaylistFiles_Remove
-        '
-        Me.btn_PlaylistFiles_Remove.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.btn_PlaylistFiles_Remove.Image = Global.PLSsync.My.Resources.Resources.delete
-        Me.btn_PlaylistFiles_Remove.Location = New System.Drawing.Point(237, 0)
-        Me.btn_PlaylistFiles_Remove.Margin = New System.Windows.Forms.Padding(3, 0, 0, 0)
-        Me.btn_PlaylistFiles_Remove.Name = "btn_PlaylistFiles_Remove"
-        Me.btn_PlaylistFiles_Remove.Size = New System.Drawing.Size(231, 38)
-        Me.btn_PlaylistFiles_Remove.TabIndex = 1
-        Me.btn_PlaylistFiles_Remove.Text = "remove Playlist File"
-        Me.btn_PlaylistFiles_Remove.TextAlign = System.Drawing.ContentAlignment.MiddleRight
-        Me.btn_PlaylistFiles_Remove.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText
-        Me.btn_PlaylistFiles_Remove.UseVisualStyleBackColor = True
-        '
-        'dgv_PlaylistFiles
-        '
-        Me.dgv_PlaylistFiles.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
-            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.dgv_PlaylistFiles.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
-        Me.dgv_PlaylistFiles.Location = New System.Drawing.Point(6, 19)
-        Me.dgv_PlaylistFiles.Name = "dgv_PlaylistFiles"
-        Me.dgv_PlaylistFiles.Size = New System.Drawing.Size(468, 143)
-        Me.dgv_PlaylistFiles.TabIndex = 0
+        Me.TableLayoutPanel2.ColumnCount = 2
+        Me.TableLayoutPanel2.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50.0!))
+        Me.TableLayoutPanel2.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50.0!))
+        Me.TableLayoutPanel2.Controls.Add(Me.grp_PlaylistFiles, 0, 0)
+        Me.TableLayoutPanel2.Controls.Add(Me.grp_SelectedDevice, 0, 0)
+        Me.TableLayoutPanel2.Location = New System.Drawing.Point(7, 19)
+        Me.TableLayoutPanel2.Name = "TableLayoutPanel2"
+        Me.TableLayoutPanel2.RowCount = 1
+        Me.TableLayoutPanel2.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50.0!))
+        Me.TableLayoutPanel2.Size = New System.Drawing.Size(967, 264)
+        Me.TableLayoutPanel2.TabIndex = 6
         '
         'grp_SelectedDevice
         '
+        Me.grp_SelectedDevice.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.grp_SelectedDevice.Controls.Add(Me.chk_Sync_Convert)
         Me.grp_SelectedDevice.Controls.Add(Me.txt_Sync_LAMEoptions)
         Me.grp_SelectedDevice.Controls.Add(Me.lbl_Sync_LAMEoptions)
@@ -239,10 +206,10 @@ Partial Class frm_Main
         Me.grp_SelectedDevice.Controls.Add(Me.lbl_Sync_StorageInfo)
         Me.grp_SelectedDevice.Controls.Add(Me.txt_Sync_DeviceName)
         Me.grp_SelectedDevice.Controls.Add(Me.lbl_Sync_DeviceName)
-        Me.grp_SelectedDevice.Location = New System.Drawing.Point(6, 19)
+        Me.grp_SelectedDevice.Location = New System.Drawing.Point(3, 3)
         Me.grp_SelectedDevice.Name = "grp_SelectedDevice"
-        Me.grp_SelectedDevice.Size = New System.Drawing.Size(481, 212)
-        Me.grp_SelectedDevice.TabIndex = 0
+        Me.grp_SelectedDevice.Size = New System.Drawing.Size(477, 212)
+        Me.grp_SelectedDevice.TabIndex = 1
         Me.grp_SelectedDevice.TabStop = False
         Me.grp_SelectedDevice.Text = "selected Device"
         '
@@ -258,9 +225,11 @@ Partial Class frm_Main
         '
         'txt_Sync_LAMEoptions
         '
+        Me.txt_Sync_LAMEoptions.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.txt_Sync_LAMEoptions.Location = New System.Drawing.Point(144, 169)
         Me.txt_Sync_LAMEoptions.Name = "txt_Sync_LAMEoptions"
-        Me.txt_Sync_LAMEoptions.Size = New System.Drawing.Size(331, 20)
+        Me.txt_Sync_LAMEoptions.Size = New System.Drawing.Size(327, 20)
         Me.txt_Sync_LAMEoptions.TabIndex = 14
         '
         'lbl_Sync_LAMEoptions
@@ -286,7 +255,7 @@ Partial Class frm_Main
         '
         Me.btn_SetMainMusicFolder_Remote.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.btn_SetMainMusicFolder_Remote.Image = Global.PLSsync.My.Resources.Resources.folder
-        Me.btn_SetMainMusicFolder_Remote.Location = New System.Drawing.Point(450, 94)
+        Me.btn_SetMainMusicFolder_Remote.Location = New System.Drawing.Point(446, 94)
         Me.btn_SetMainMusicFolder_Remote.Name = "btn_SetMainMusicFolder_Remote"
         Me.btn_SetMainMusicFolder_Remote.Size = New System.Drawing.Size(25, 25)
         Me.btn_SetMainMusicFolder_Remote.TabIndex = 11
@@ -303,6 +272,8 @@ Partial Class frm_Main
         '
         'txt_Sync_MainMusicFolder_Remote
         '
+        Me.txt_Sync_MainMusicFolder_Remote.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.txt_Sync_MainMusicFolder_Remote.Location = New System.Drawing.Point(144, 97)
         Me.txt_Sync_MainMusicFolder_Remote.Name = "txt_Sync_MainMusicFolder_Remote"
         Me.txt_Sync_MainMusicFolder_Remote.ReadOnly = True
@@ -313,7 +284,7 @@ Partial Class frm_Main
         '
         Me.btn_SetMainMusicFolder_Local.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.btn_SetMainMusicFolder_Local.Image = Global.PLSsync.My.Resources.Resources.folder
-        Me.btn_SetMainMusicFolder_Local.Location = New System.Drawing.Point(450, 67)
+        Me.btn_SetMainMusicFolder_Local.Location = New System.Drawing.Point(446, 67)
         Me.btn_SetMainMusicFolder_Local.Name = "btn_SetMainMusicFolder_Local"
         Me.btn_SetMainMusicFolder_Local.Size = New System.Drawing.Size(25, 25)
         Me.btn_SetMainMusicFolder_Local.TabIndex = 8
@@ -344,7 +315,7 @@ Partial Class frm_Main
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.pic_Progress.Location = New System.Drawing.Point(144, 43)
         Me.pic_Progress.Name = "pic_Progress"
-        Me.pic_Progress.Size = New System.Drawing.Size(331, 20)
+        Me.pic_Progress.Size = New System.Drawing.Size(327, 20)
         Me.pic_Progress.TabIndex = 5
         Me.pic_Progress.TabStop = False
         '
@@ -364,7 +335,7 @@ Partial Class frm_Main
         Me.txt_Sync_DeviceName.Location = New System.Drawing.Point(144, 17)
         Me.txt_Sync_DeviceName.Name = "txt_Sync_DeviceName"
         Me.txt_Sync_DeviceName.ReadOnly = True
-        Me.txt_Sync_DeviceName.Size = New System.Drawing.Size(331, 20)
+        Me.txt_Sync_DeviceName.Size = New System.Drawing.Size(327, 20)
         Me.txt_Sync_DeviceName.TabIndex = 1
         '
         'lbl_Sync_DeviceName
@@ -376,10 +347,72 @@ Partial Class frm_Main
         Me.lbl_Sync_DeviceName.TabIndex = 0
         Me.lbl_Sync_DeviceName.Text = "Device Name:"
         '
-        'FolderBrowserDialog
+        'grp_PlaylistFiles
         '
-        Me.FolderBrowserDialog.RootFolder = System.Environment.SpecialFolder.MyComputer
-        Me.FolderBrowserDialog.ShowNewFolderButton = False
+        Me.grp_PlaylistFiles.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.grp_PlaylistFiles.Controls.Add(Me.TableLayoutPanel1)
+        Me.grp_PlaylistFiles.Controls.Add(Me.dgv_PlaylistFiles)
+        Me.grp_PlaylistFiles.Location = New System.Drawing.Point(486, 3)
+        Me.grp_PlaylistFiles.Name = "grp_PlaylistFiles"
+        Me.grp_PlaylistFiles.Size = New System.Drawing.Size(478, 212)
+        Me.grp_PlaylistFiles.TabIndex = 2
+        Me.grp_PlaylistFiles.TabStop = False
+        Me.grp_PlaylistFiles.Text = "Playlist files"
+        '
+        'TableLayoutPanel1
+        '
+        Me.TableLayoutPanel1.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.TableLayoutPanel1.ColumnCount = 2
+        Me.TableLayoutPanel1.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50.0!))
+        Me.TableLayoutPanel1.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50.0!))
+        Me.TableLayoutPanel1.Controls.Add(Me.btn_PlaylistFiles_Add, 0, 0)
+        Me.TableLayoutPanel1.Controls.Add(Me.btn_PlaylistFiles_Remove, 1, 0)
+        Me.TableLayoutPanel1.Location = New System.Drawing.Point(6, 168)
+        Me.TableLayoutPanel1.Name = "TableLayoutPanel1"
+        Me.TableLayoutPanel1.RowCount = 1
+        Me.TableLayoutPanel1.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50.0!))
+        Me.TableLayoutPanel1.Size = New System.Drawing.Size(466, 38)
+        Me.TableLayoutPanel1.TabIndex = 1
+        '
+        'btn_PlaylistFiles_Add
+        '
+        Me.btn_PlaylistFiles_Add.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.btn_PlaylistFiles_Add.Image = Global.PLSsync.My.Resources.Resources.add
+        Me.btn_PlaylistFiles_Add.Location = New System.Drawing.Point(0, 0)
+        Me.btn_PlaylistFiles_Add.Margin = New System.Windows.Forms.Padding(0, 0, 3, 0)
+        Me.btn_PlaylistFiles_Add.Name = "btn_PlaylistFiles_Add"
+        Me.btn_PlaylistFiles_Add.Size = New System.Drawing.Size(230, 38)
+        Me.btn_PlaylistFiles_Add.TabIndex = 0
+        Me.btn_PlaylistFiles_Add.Text = "add Playlist File"
+        Me.btn_PlaylistFiles_Add.TextAlign = System.Drawing.ContentAlignment.MiddleRight
+        Me.btn_PlaylistFiles_Add.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText
+        Me.btn_PlaylistFiles_Add.UseVisualStyleBackColor = True
+        '
+        'btn_PlaylistFiles_Remove
+        '
+        Me.btn_PlaylistFiles_Remove.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.btn_PlaylistFiles_Remove.Image = Global.PLSsync.My.Resources.Resources.delete
+        Me.btn_PlaylistFiles_Remove.Location = New System.Drawing.Point(236, 0)
+        Me.btn_PlaylistFiles_Remove.Margin = New System.Windows.Forms.Padding(3, 0, 0, 0)
+        Me.btn_PlaylistFiles_Remove.Name = "btn_PlaylistFiles_Remove"
+        Me.btn_PlaylistFiles_Remove.Size = New System.Drawing.Size(230, 38)
+        Me.btn_PlaylistFiles_Remove.TabIndex = 1
+        Me.btn_PlaylistFiles_Remove.Text = "remove Playlist File"
+        Me.btn_PlaylistFiles_Remove.TextAlign = System.Drawing.ContentAlignment.MiddleRight
+        Me.btn_PlaylistFiles_Remove.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText
+        Me.btn_PlaylistFiles_Remove.UseVisualStyleBackColor = True
+        '
+        'dgv_PlaylistFiles
+        '
+        Me.dgv_PlaylistFiles.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.dgv_PlaylistFiles.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
+        Me.dgv_PlaylistFiles.Location = New System.Drawing.Point(6, 19)
+        Me.dgv_PlaylistFiles.Name = "dgv_PlaylistFiles"
+        Me.dgv_PlaylistFiles.Size = New System.Drawing.Size(466, 143)
+        Me.dgv_PlaylistFiles.TabIndex = 0
         '
         'frm_Main
         '
@@ -394,12 +427,13 @@ Partial Class frm_Main
         CType(Me.dgv_Devices, System.ComponentModel.ISupportInitialize).EndInit()
         Me.grp_Sync.ResumeLayout(False)
         Me.grp_Sync.PerformLayout()
-        Me.grp_PlaylistFiles.ResumeLayout(False)
-        Me.TableLayoutPanel1.ResumeLayout(False)
-        CType(Me.dgv_PlaylistFiles, System.ComponentModel.ISupportInitialize).EndInit()
+        Me.TableLayoutPanel2.ResumeLayout(False)
         Me.grp_SelectedDevice.ResumeLayout(False)
         Me.grp_SelectedDevice.PerformLayout()
         CType(Me.pic_Progress, System.ComponentModel.ISupportInitialize).EndInit()
+        Me.grp_PlaylistFiles.ResumeLayout(False)
+        Me.TableLayoutPanel1.ResumeLayout(False)
+        CType(Me.dgv_PlaylistFiles, System.ComponentModel.ISupportInitialize).EndInit()
         Me.ResumeLayout(False)
 
     End Sub
@@ -408,29 +442,30 @@ Partial Class frm_Main
     Friend WithEvents btn_RefreshDevices As Button
     Friend WithEvents btn_UseSelectedDevice As Button
     Friend WithEvents grp_Sync As GroupBox
-    Friend WithEvents grp_SelectedDevice As GroupBox
-    Friend WithEvents lbl_Sync_DeviceName As Label
-    Friend WithEvents txt_Sync_DeviceName As TextBox
-    Friend WithEvents lbl_Sync_StorageInfo As Label
-    Friend WithEvents pic_Progress As PictureBox
-    Friend WithEvents btn_SetMainMusicFolder_Local As Button
-    Friend WithEvents txt_Sync_MainMusicFolder_Local As TextBox
-    Friend WithEvents lbl_Sync_MainMusicFolder_Local As Label
+    Friend WithEvents OpenFileDialog As OpenFileDialog
+    Friend WithEvents txt_Log As TextBox
+    Friend WithEvents btn_Sync_Sync As Button
+    Friend WithEvents prb_SyncPlaylists As ProgressBar
+    Friend WithEvents FolderBrowserDialog As FolderBrowserDialog
+    Friend WithEvents TableLayoutPanel2 As TableLayoutPanel
     Friend WithEvents grp_PlaylistFiles As GroupBox
     Friend WithEvents TableLayoutPanel1 As TableLayoutPanel
     Friend WithEvents btn_PlaylistFiles_Add As Button
     Friend WithEvents btn_PlaylistFiles_Remove As Button
     Friend WithEvents dgv_PlaylistFiles As DataGridView
-    Friend WithEvents OpenFileDialog As OpenFileDialog
-    Friend WithEvents txt_Sync_MainMusicFolder_Remote As TextBox
-    Friend WithEvents txt_Log As TextBox
-    Friend WithEvents btn_Sync_Sync As Button
-    Friend WithEvents prb_SyncPlaylists As ProgressBar
-    Friend WithEvents FolderBrowserDialog As FolderBrowserDialog
-    Friend WithEvents lbl_Sync_MainMusicFolder_Remote As Label
-    Friend WithEvents btn_SetMainMusicFolder_Remote As Button
+    Friend WithEvents grp_SelectedDevice As GroupBox
+    Friend WithEvents chk_Sync_Convert As CheckBox
     Friend WithEvents txt_Sync_LAMEoptions As TextBox
     Friend WithEvents lbl_Sync_LAMEoptions As Label
     Friend WithEvents chk_Sync_EmbedCover As CheckBox
-    Friend WithEvents chk_Sync_Convert As CheckBox
+    Friend WithEvents btn_SetMainMusicFolder_Remote As Button
+    Friend WithEvents lbl_Sync_MainMusicFolder_Remote As Label
+    Friend WithEvents txt_Sync_MainMusicFolder_Remote As TextBox
+    Friend WithEvents btn_SetMainMusicFolder_Local As Button
+    Friend WithEvents txt_Sync_MainMusicFolder_Local As TextBox
+    Friend WithEvents lbl_Sync_MainMusicFolder_Local As Label
+    Friend WithEvents pic_Progress As PictureBox
+    Friend WithEvents lbl_Sync_StorageInfo As Label
+    Friend WithEvents txt_Sync_DeviceName As TextBox
+    Friend WithEvents lbl_Sync_DeviceName As Label
 End Class
