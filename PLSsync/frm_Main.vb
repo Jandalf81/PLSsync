@@ -10,7 +10,9 @@ Public Class frm_Main
     Public bs_Devices As New BindingSource()
     Public bs_PlaylistFiles As New BindingSource()
 
-    Public DeviceMainFolder As String = ""
+    Public justAddedPlaylist As New Playlist()
+
+    ' Public DeviceMainFolder As String = ""
 
     Public WithEvents bgw_SyncPlaylist As New BackgroundWorker() With {
         .WorkerReportsProgress = True,
@@ -29,6 +31,7 @@ Public Class frm_Main
     End Sub
 
     Private Sub tidyUp()
+        ' remove temporary mp3 files
         If (My.Computer.FileSystem.FileExists(My.Application.Info.DirectoryPath + "\tmp\converted.mp3") = True) Then
             My.Computer.FileSystem.DeleteFile(My.Application.Info.DirectoryPath + "\tmp\converted.mp3")
         End If
@@ -36,6 +39,11 @@ Public Class frm_Main
         If (My.Computer.FileSystem.FileExists(My.Application.Info.DirectoryPath + "\tmp\embedCover.mp3") = True) Then
             My.Computer.FileSystem.DeleteFile(My.Application.Info.DirectoryPath + "\tmp\embedCover.mp3")
         End If
+
+        ' remove temporary m3u files
+        For Each file As String In System.IO.Directory.GetFiles(My.Application.Info.DirectoryPath + "\tmp\", "*.m3u")
+            My.Computer.FileSystem.DeleteFile(file)
+        Next
     End Sub
 
     Private Sub Button1_Click(sender As Object, e As EventArgs)
@@ -103,7 +111,7 @@ Public Class frm_Main
 
         ' add prepared columns to DataGridView
         With dgv_Devices
-            .ReadOnly() = True
+            .ReadOnly = True
             .AllowUserToAddRows = False
             .AutoGenerateColumns = False
             .SelectionMode = DataGridViewSelectionMode.FullRowSelect
@@ -196,6 +204,9 @@ Public Class frm_Main
         chk_Sync_Convert.Checked = preset.Convert
         txt_Sync_LAMEoptions.Text = preset.LAMEoptions
         txt_Sync_LAMEoptions.Enabled = preset.Convert ' Only enable the text field if the chekbox is checkes
+        chk_Sync_SyncPlaylists.Checked = preset.SyncPlaylists
+        chk_Sync_CreatePlaylistWithAddedTracks.Checked = preset.CreatePlaylistWithAddedTracks
+        txt_Sync_PlaylistWithAddedTracks.Text = preset.PlaylistWithAddedTracksName
 
         grp_Sync.Enabled = True
     End Sub
@@ -222,7 +233,7 @@ Public Class frm_Main
             If storageInfo Is Nothing Then
                 e.Graphics.DrawString("n/a", Me.Font, Brushes.Black, pic_Progress.ClientRectangle, sf)
             Else
-                DeviceMainFolder = storageInfo.Description
+                ' DeviceMainFolder = storageInfo.Description
 
                 Dim percent As Integer = Math.Round(storageInfo.FreeSpaceInBytes * 100 / storageInfo.Capacity, 0)
                 Dim color As Brush
@@ -275,6 +286,18 @@ Public Class frm_Main
     Private Sub txt_Sync_LAMEoptions_TextChanged(sender As Object, e As EventArgs) Handles txt_Sync_LAMEoptions.TextChanged
         preset.LAMEoptions = txt_Sync_LAMEoptions.Text
     End Sub
+
+    Private Sub chk_Sync_SyncPlaylists_CheckedChanged(sender As Object, e As EventArgs) Handles chk_Sync_SyncPlaylists.CheckedChanged
+        preset.SyncPlaylists = chk_Sync_SyncPlaylists.Checked
+    End Sub
+
+    Private Sub chk_Sync_CreatePlaylistWithAddedTracks_CheckedChanged(sender As Object, e As EventArgs) Handles chk_Sync_CreatePlaylistWithAddedTracks.CheckedChanged
+        preset.CreatePlaylistWithAddedTracks = chk_Sync_CreatePlaylistWithAddedTracks.Checked
+    End Sub
+
+    Private Sub txt_Sync_PlaylistWithAddedTracks_TextChanged(sender As Object, e As EventArgs) Handles txt_Sync_PlaylistWithAddedTracks.TextChanged
+        preset.PlaylistWithAddedTracksName = txt_Sync_PlaylistWithAddedTracks.Text
+    End Sub
 #End Region
 
 #Region "form grp_Sync grp_Playlists"
@@ -300,7 +323,15 @@ Public Class frm_Main
 
     Private Sub btn_Sync_Sync_Click(sender As Object, e As EventArgs) Handles btn_Sync_Sync.Click
         preset.Save(selectedDevice.Description + "_" + selectedDevice.SerialNumber)
+
+        grp_Devices.Enabled = False
+        grp_Sync.Enabled = False
+
         bgw_SyncPlaylist.RunWorkerAsync(preset)
+
+        ' TODO re-enable both groups after BGW is finished
+        grp_Devices.Enabled = True
+        grp_Sync.Enabled = True
     End Sub
 
 #End Region
@@ -319,6 +350,7 @@ Public Class frm_Main
             allTracks += playlist.Tracks.Count
         Next
 
+        ' sync all Tracks in all Playlists
         For Each playlist In preset.Playlists
             For Each track In playlist.Tracks
 
@@ -341,7 +373,7 @@ Public Class frm_Main
                     End If
 
                     bgw_SyncPlaylist.ReportProgress(currentTrack * 100 / allTracks, "INFO" & vbTab & "Uploading...")
-                    track.upload(selectedDevice)
+                    track.upload(selectedDevice, preset, justAddedPlaylist)
                     bgw_SyncPlaylist.ReportProgress(currentTrack * 100 / allTracks, "INFO" & vbTab & "Upload OK")
                 Else
                     bgw_SyncPlaylist.ReportProgress(currentTrack * 100 / allTracks, "INFO" & vbTab & "File exists")
@@ -350,6 +382,27 @@ Public Class frm_Main
                 tidyUp()
             Next
         Next
+
+        ' sync Playlists if checked
+        If (preset.SyncPlaylists = True) Then
+            For Each playlist In preset.Playlists
+                playlist.upload(selectedDevice, preset)
+            Next
+        End If
+
+        ' create new Playlist if checked
+        If (preset.CreatePlaylistWithAddedTracks = True) Then ' AndAlso justAddedPlaylist.Tracks.Count > 0) Then
+            ' TODO make these options read-able from the GUI (open browser?)
+            Dim format As String
+            ' formatting options: https://docs.microsoft.com/de-de/dotnet/standard/base-types/custom-date-and-time-format-strings
+            format = txt_Sync_PlaylistWithAddedTracks.Text.Split("["c)(1).Split("]"c)(0) ' .ToLower().Replace("mmm", "MMM").Replace("mm", "MM")
+
+            Dim filename As String
+            filename = txt_Sync_PlaylistWithAddedTracks.Text.Replace("@date[" & txt_Sync_PlaylistWithAddedTracks.Text.Split("["c)(1).Split("]"c)(0) & "]", DateTime.Now.ToString(format))
+
+            justAddedPlaylist.Filename = My.Application.Info.DirectoryPath & "\tmp\" & filename & " .m3u"
+            justAddedPlaylist.upload(selectedDevice, preset)
+        End If
     End Sub
 
     Private Sub bgw_SyncPlaylist_ProgressChanged(sender As Object, e As ProgressChangedEventArgs) Handles bgw_SyncPlaylist.ProgressChanged

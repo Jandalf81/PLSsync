@@ -74,8 +74,8 @@
     '    Me.upload(Me.remotePath)
     'End Sub
 
-    Public Sub upload(toDevice As MediaDevices.MediaDevice)
-        Me.upload(toDevice, Me.remotePath)
+    Public Sub upload(toDevice As MediaDevices.MediaDevice, preset As Preset, newlyAdded As Playlist)
+        Me.upload(toDevice, Me.remotePath, preset, newlyAdded)
     End Sub
 
     'Public Sub upload(toPath As String)
@@ -97,7 +97,7 @@
     '    End If
     'End Sub
 
-    Public Sub upload(toDevice As MediaDevices.MediaDevice, toPath As String)
+    Public Sub upload(toDevice As MediaDevices.MediaDevice, toPath As String, preset As Preset, newlyAdded As Playlist)
         If (toDevice.FileExists(Me.remotePath) = False) Then
             If (toDevice.DirectoryExists(Me._remotePathOnly) = False) Then
                 toDevice.CreateDirectory(Me._remotePathOnly)
@@ -107,6 +107,11 @@
             toDevice.UploadFile(fs, toPath)
 
             fs.Dispose()
+
+            ' add track to playlist if it's being uploaded
+            If (preset.CreatePlaylistWithAddedTracks = True) Then
+                newlyAdded.Tracks.Add(Me)
+            End If
         End If
 
 

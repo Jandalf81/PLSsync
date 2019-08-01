@@ -8,7 +8,8 @@ Public Class Preset
     Private _convert As Boolean
     Private _LAMEoptions As String
     Private _syncPlaylists As Boolean
-    Private _createPlaylistOnSync As Boolean
+    Private _createPlaylistWithAddedTracks As Boolean
+    Private _PlaylistWithAddedTracksName As String
 
     Public Property LocalMainPath As String
         Get
@@ -66,12 +67,20 @@ Public Class Preset
             _syncPlaylists = value
         End Set
     End Property
-    Public Property CreatePlaylistOnSync As Boolean
+    Public Property CreatePlaylistWithAddedTracks As Boolean
         Get
-            Return _createPlaylistOnSync
+            Return _createPlaylistWithAddedTracks
         End Get
         Set(value As Boolean)
-            _createPlaylistOnSync = value
+            _createPlaylistWithAddedTracks = value
+        End Set
+    End Property
+    Public Property PlaylistWithAddedTracksName As String
+        Get
+            Return _PlaylistWithAddedTracksName
+        End Get
+        Set(value As String)
+            _PlaylistWithAddedTracksName = value
         End Set
     End Property
 
@@ -112,6 +121,7 @@ Public Class Preset
         Me._convert = IPreset.Convert
         Me._LAMEoptions = IPreset.LAMEoptions
         Me._syncPlaylists = IPreset.SyncPlaylists
-        Me._createPlaylistOnSync = IPreset.CreatePlaylistOnSync
+        Me._createPlaylistWithAddedTracks = IPreset.CreatePlaylistWithAddedTracks
+        Me._PlaylistWithAddedTracksName = IPreset.PlaylistWithAddedTracksName
     End Sub
 End Class

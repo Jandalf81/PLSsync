@@ -14,7 +14,11 @@ Public Class Playlist
             _Filename = value
 
             ' get content of file on setting the Filename (even on Deserialization)
-            Me.NumberOfTracks = System.IO.File.ReadAllLines(value).Length
+            If (My.Computer.FileSystem.FileExists(Me.Filename)) Then
+                Me.NumberOfTracks = System.IO.File.ReadAllLines(value).Length
+            Else
+                Me.NumberOfTracks = 0
+            End If
         End Set
     End Property
     <XmlIgnore()> Public Property NumberOfTracks As Integer ' ignore this property on Serialization
@@ -82,5 +86,35 @@ Public Class Playlist
 
             fileReader.Close()
         End If
+    End Sub
+
+    Public Sub createRemotePlaylist(preset As Preset)
+        Dim content As String = ""
+
+        For Each track In Me.Tracks
+            content += track.remotePath.Replace(preset.RemoteMainPath, "") & vbCrLf
+        Next
+
+        Dim file As System.IO.StreamWriter
+        file = My.Computer.FileSystem.OpenTextFileWriter(My.Application.Info.DirectoryPath & "\tmp\" & IO.Path.GetFileName(Me.Filename), False)
+        file.Write(content)
+        file.Close()
+        file.Dispose()
+    End Sub
+
+    Public Sub upload(toDevice As MediaDevices.MediaDevice, preset As Preset)
+        ' delete Playlist file if it exists
+        If (toDevice.FileExists(preset.RemoteMainPath & IO.Path.GetFileName(Me.Filename))) Then
+            toDevice.DeleteFile(preset.RemoteMainPath & IO.Path.GetFileName(Me.Filename))
+        End If
+
+        ' create remote Playlist
+        createRemotePlaylist(preset)
+
+        ' upload new file
+        Dim fs As New IO.FileStream(My.Application.Info.DirectoryPath & "\tmp\" & IO.Path.GetFileName(Me.Filename), IO.FileMode.Open, IO.FileAccess.Read)
+        toDevice.UploadFile(fs, preset.RemoteMainPath & IO.Path.GetFileName(Me.Filename))
+
+        fs.Dispose()
     End Sub
 End Class
