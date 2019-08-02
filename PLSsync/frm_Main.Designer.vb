@@ -34,6 +34,8 @@ Partial Class frm_Main
         Me.btn_PlaylistFiles_Remove = New System.Windows.Forms.Button()
         Me.dgv_PlaylistFiles = New System.Windows.Forms.DataGridView()
         Me.grp_SelectedDevice = New System.Windows.Forms.GroupBox()
+        Me.lbl_Sync_PlaylistWithAddedTracks = New System.Windows.Forms.Label()
+        Me.txt_Sync_PlaylistWithAddedTracks = New System.Windows.Forms.TextBox()
         Me.chk_Sync_CreatePlaylistWithAddedTracks = New System.Windows.Forms.CheckBox()
         Me.chk_Sync_SyncPlaylists = New System.Windows.Forms.CheckBox()
         Me.chk_Sync_Convert = New System.Windows.Forms.CheckBox()
@@ -55,8 +57,6 @@ Partial Class frm_Main
         Me.txt_Log = New System.Windows.Forms.TextBox()
         Me.OpenFileDialog = New System.Windows.Forms.OpenFileDialog()
         Me.FolderBrowserDialog = New System.Windows.Forms.FolderBrowserDialog()
-        Me.txt_Sync_PlaylistWithAddedTracks = New System.Windows.Forms.TextBox()
-        Me.lbl_Sync_PlaylistWithAddedTracks = New System.Windows.Forms.Label()
         Me.grp_Devices.SuspendLayout()
         CType(Me.dgv_Devices, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.grp_Sync.SuspendLayout()
@@ -255,6 +255,24 @@ Partial Class frm_Main
         Me.grp_SelectedDevice.TabStop = False
         Me.grp_SelectedDevice.Text = "selected Device"
         '
+        'lbl_Sync_PlaylistWithAddedTracks
+        '
+        Me.lbl_Sync_PlaylistWithAddedTracks.AutoSize = True
+        Me.lbl_Sync_PlaylistWithAddedTracks.Location = New System.Drawing.Point(7, 247)
+        Me.lbl_Sync_PlaylistWithAddedTracks.Name = "lbl_Sync_PlaylistWithAddedTracks"
+        Me.lbl_Sync_PlaylistWithAddedTracks.Size = New System.Drawing.Size(71, 13)
+        Me.lbl_Sync_PlaylistWithAddedTracks.TabIndex = 19
+        Me.lbl_Sync_PlaylistWithAddedTracks.Text = "Playlist name:"
+        '
+        'txt_Sync_PlaylistWithAddedTracks
+        '
+        Me.txt_Sync_PlaylistWithAddedTracks.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.txt_Sync_PlaylistWithAddedTracks.Location = New System.Drawing.Point(144, 244)
+        Me.txt_Sync_PlaylistWithAddedTracks.Name = "txt_Sync_PlaylistWithAddedTracks"
+        Me.txt_Sync_PlaylistWithAddedTracks.Size = New System.Drawing.Size(327, 20)
+        Me.txt_Sync_PlaylistWithAddedTracks.TabIndex = 18
+        '
         'chk_Sync_CreatePlaylistWithAddedTracks
         '
         Me.chk_Sync_CreatePlaylistWithAddedTracks.AutoSize = True
@@ -449,24 +467,6 @@ Partial Class frm_Main
         '
         Me.FolderBrowserDialog.RootFolder = System.Environment.SpecialFolder.MyComputer
         Me.FolderBrowserDialog.ShowNewFolderButton = False
-        '
-        'txt_Sync_PlaylistWithAddedTracks
-        '
-        Me.txt_Sync_PlaylistWithAddedTracks.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
-            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.txt_Sync_PlaylistWithAddedTracks.Location = New System.Drawing.Point(144, 244)
-        Me.txt_Sync_PlaylistWithAddedTracks.Name = "txt_Sync_PlaylistWithAddedTracks"
-        Me.txt_Sync_PlaylistWithAddedTracks.Size = New System.Drawing.Size(327, 20)
-        Me.txt_Sync_PlaylistWithAddedTracks.TabIndex = 18
-        '
-        'lbl_Sync_PlaylistWithAddedTracks
-        '
-        Me.lbl_Sync_PlaylistWithAddedTracks.AutoSize = True
-        Me.lbl_Sync_PlaylistWithAddedTracks.Location = New System.Drawing.Point(7, 247)
-        Me.lbl_Sync_PlaylistWithAddedTracks.Name = "lbl_Sync_PlaylistWithAddedTracks"
-        Me.lbl_Sync_PlaylistWithAddedTracks.Size = New System.Drawing.Size(71, 13)
-        Me.lbl_Sync_PlaylistWithAddedTracks.TabIndex = 19
-        Me.lbl_Sync_PlaylistWithAddedTracks.Text = "Playlist name:"
         '
         'frm_Main
         '

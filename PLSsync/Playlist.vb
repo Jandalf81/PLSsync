@@ -98,6 +98,7 @@ Public Class Playlist
         Dim file As System.IO.StreamWriter
         file = My.Computer.FileSystem.OpenTextFileWriter(My.Application.Info.DirectoryPath & "\tmp\" & IO.Path.GetFileName(Me.Filename), False)
         file.Write(content)
+
         file.Close()
         file.Dispose()
     End Sub

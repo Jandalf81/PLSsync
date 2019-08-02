@@ -273,6 +273,15 @@ Public Class frm_Main
         End If
     End Sub
 
+    Private Sub btn_SetMainMusicFolder_Remote_Click(sender As Object, e As EventArgs) Handles btn_SetMainMusicFolder_Remote.Click
+        Dim frm_Tree = New frm_AndroidTree(selectedDevice)
+
+        If (frm_Tree.ShowDialog(Me) = DialogResult.OK) Then
+            txt_Sync_MainMusicFolder_Remote.Text = frm_Tree.selectedPath
+            preset.RemoteMainPath = frm_Tree.selectedPath
+        End If
+    End Sub
+
     Private Sub chk_Sync_EmbedCover_CheckedChanged(sender As Object, e As EventArgs) Handles chk_Sync_EmbedCover.CheckedChanged
         preset.EmbedCover = chk_Sync_EmbedCover.Checked
     End Sub
