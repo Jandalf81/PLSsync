@@ -57,6 +57,8 @@ Partial Class frm_Main
         Me.txt_Log = New System.Windows.Forms.TextBox()
         Me.OpenFileDialog = New System.Windows.Forms.OpenFileDialog()
         Me.FolderBrowserDialog = New System.Windows.Forms.FolderBrowserDialog()
+        Me.dgv_Log = New System.Windows.Forms.DataGridView()
+        Me.btn_Sync_Cancel = New System.Windows.Forms.Button()
         Me.grp_Devices.SuspendLayout()
         CType(Me.dgv_Devices, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.grp_Sync.SuspendLayout()
@@ -66,6 +68,7 @@ Partial Class frm_Main
         CType(Me.dgv_PlaylistFiles, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.grp_SelectedDevice.SuspendLayout()
         CType(Me.pic_Progress, System.ComponentModel.ISupportInitialize).BeginInit()
+        CType(Me.dgv_Log, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
         '
         'grp_Devices
@@ -129,13 +132,15 @@ Partial Class frm_Main
         Me.grp_Sync.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
             Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.grp_Sync.Controls.Add(Me.btn_Sync_Cancel)
+        Me.grp_Sync.Controls.Add(Me.dgv_Log)
         Me.grp_Sync.Controls.Add(Me.TableLayoutPanel2)
         Me.grp_Sync.Controls.Add(Me.prb_SyncPlaylists)
         Me.grp_Sync.Controls.Add(Me.btn_Sync_Sync)
         Me.grp_Sync.Controls.Add(Me.txt_Log)
         Me.grp_Sync.Location = New System.Drawing.Point(12, 219)
         Me.grp_Sync.Name = "grp_Sync"
-        Me.grp_Sync.Size = New System.Drawing.Size(980, 445)
+        Me.grp_Sync.Size = New System.Drawing.Size(980, 510)
         Me.grp_Sync.TabIndex = 2
         Me.grp_Sync.TabStop = False
         Me.grp_Sync.Text = "Sync"
@@ -443,7 +448,7 @@ Partial Class frm_Main
         Me.btn_Sync_Sync.Image = Global.PLSsync.My.Resources.Resources.arrow_refresh
         Me.btn_Sync_Sync.Location = New System.Drawing.Point(7, 308)
         Me.btn_Sync_Sync.Name = "btn_Sync_Sync"
-        Me.btn_Sync_Sync.Size = New System.Drawing.Size(967, 38)
+        Me.btn_Sync_Sync.Size = New System.Drawing.Size(722, 38)
         Me.btn_Sync_Sync.TabIndex = 4
         Me.btn_Sync_Sync.Text = "Sync Playlists to Device"
         Me.btn_Sync_Sync.TextAlign = System.Drawing.ContentAlignment.MiddleRight
@@ -452,14 +457,13 @@ Partial Class frm_Main
         '
         'txt_Log
         '
-        Me.txt_Log.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
-            Or System.Windows.Forms.AnchorStyles.Left) _
+        Me.txt_Log.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.txt_Log.Location = New System.Drawing.Point(7, 378)
         Me.txt_Log.Multiline = True
         Me.txt_Log.Name = "txt_Log"
         Me.txt_Log.ScrollBars = System.Windows.Forms.ScrollBars.Both
-        Me.txt_Log.Size = New System.Drawing.Size(967, 61)
+        Me.txt_Log.Size = New System.Drawing.Size(967, 64)
         Me.txt_Log.TabIndex = 3
         Me.txt_Log.WordWrap = False
         '
@@ -468,11 +472,32 @@ Partial Class frm_Main
         Me.FolderBrowserDialog.RootFolder = System.Environment.SpecialFolder.MyComputer
         Me.FolderBrowserDialog.ShowNewFolderButton = False
         '
+        'dgv_Log
+        '
+        Me.dgv_Log.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
+            Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.dgv_Log.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
+        Me.dgv_Log.Location = New System.Drawing.Point(7, 448)
+        Me.dgv_Log.Name = "dgv_Log"
+        Me.dgv_Log.Size = New System.Drawing.Size(967, 56)
+        Me.dgv_Log.TabIndex = 7
+        '
+        'btn_Sync_Cancel
+        '
+        Me.btn_Sync_Cancel.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.btn_Sync_Cancel.Location = New System.Drawing.Point(735, 308)
+        Me.btn_Sync_Cancel.Name = "btn_Sync_Cancel"
+        Me.btn_Sync_Cancel.Size = New System.Drawing.Size(239, 38)
+        Me.btn_Sync_Cancel.TabIndex = 8
+        Me.btn_Sync_Cancel.Text = "Cancel"
+        Me.btn_Sync_Cancel.UseVisualStyleBackColor = True
+        '
         'frm_Main
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
-        Me.ClientSize = New System.Drawing.Size(1004, 676)
+        Me.ClientSize = New System.Drawing.Size(1004, 741)
         Me.Controls.Add(Me.grp_Sync)
         Me.Controls.Add(Me.grp_Devices)
         Me.Name = "frm_Main"
@@ -488,6 +513,7 @@ Partial Class frm_Main
         Me.grp_SelectedDevice.ResumeLayout(False)
         Me.grp_SelectedDevice.PerformLayout()
         CType(Me.pic_Progress, System.ComponentModel.ISupportInitialize).EndInit()
+        CType(Me.dgv_Log, System.ComponentModel.ISupportInitialize).EndInit()
         Me.ResumeLayout(False)
 
     End Sub
@@ -526,4 +552,6 @@ Partial Class frm_Main
     Friend WithEvents chk_Sync_CreatePlaylistWithAddedTracks As CheckBox
     Friend WithEvents lbl_Sync_PlaylistWithAddedTracks As Label
     Friend WithEvents txt_Sync_PlaylistWithAddedTracks As TextBox
+    Friend WithEvents dgv_Log As DataGridView
+    Friend WithEvents btn_Sync_Cancel As Button
 End Class

@@ -2,6 +2,7 @@
 
 Public Class frm_Main
     Public preset As New Preset()
+    Public log As New Log()
 
     Public devices As IEnumerable(Of MediaDevices.MediaDevice)
     Public selectedDevice As MediaDevices.MediaDevice
@@ -9,6 +10,7 @@ Public Class frm_Main
 
     Public bs_Devices As New BindingSource()
     Public bs_PlaylistFiles As New BindingSource()
+    Public bs_Log As New BindingSource()
 
     Public justAddedPlaylist As New Playlist()
 
@@ -46,29 +48,29 @@ Public Class frm_Main
         Next
     End Sub
 
-    Private Sub Button1_Click(sender As Object, e As EventArgs)
-        Dim devices As IEnumerable(Of MediaDevices.MediaDevice) = MediaDevices.MediaDevice.GetDevices()
-
-        For Each device In devices
-            MsgBox("FriendlyName: " + device.FriendlyName + vbCrLf +
-                   "Description: " + device.Description + vbCrLf +
-                   "Manufacturer: " + device.Manufacturer)
-
-            If (device.Description = "Pixel 2") Then
-                device.Connect()
-
-                Dim directories As IEnumerable(Of String) = device.EnumerateDirectories("/", "", IO.SearchOption.TopDirectoryOnly)
-                For Each directory In directories
-                    MsgBox("Directory: " + directory)
-                Next
-
-                Dim contentLocations As IEnumerable(Of String) = device.GetContentLocations(MediaDevices.ContentType.Audio)
-                For Each contentLocation In contentLocations
-                    MsgBox("Content Location: " + contentLocation)
-                Next
-            End If
-        Next
-    End Sub
+    'Private Sub Button1_Click(sender As Object, e As EventArgs)
+    '    Dim devices As IEnumerable(Of MediaDevices.MediaDevice) = MediaDevices.MediaDevice.GetDevices()
+    '
+    '    For Each device In devices
+    '        MsgBox("FriendlyName: " + device.FriendlyName + vbCrLf +
+    '               "Description: " + device.Description + vbCrLf +
+    '               "Manufacturer: " + device.Manufacturer)
+    '
+    '        If (device.Description = "Pixel 2") Then
+    '            device.Connect()
+    '
+    '            Dim directories As IEnumerable(Of String) = device.EnumerateDirectories("/", "", IO.SearchOption.TopDirectoryOnly)
+    '            For Each directory In directories
+    '                MsgBox("Directory: " + directory)
+    '            Next
+    '
+    '            Dim contentLocations As IEnumerable(Of String) = device.GetContentLocations(MediaDevices.ContentType.Audio)
+    '            For Each contentLocation In contentLocations
+    '                MsgBox("Content Location: " + contentLocation)
+    '            Next
+    '        End If
+    '    Next
+    'End Sub
 
     'Private Sub Button1_Click_1(sender As Object, e As EventArgs) Handles Button1.Click
     '    Dim t As New Track("E:\_PARsync\Chiptunes\Chipzel\Disconnected (2010)\01 - Something beautiful.mp3")
@@ -152,8 +154,66 @@ Public Class frm_Main
         ' set BindingSources
         bs_PlaylistFiles.DataSource = preset.Playlists
 
-        refreshDevices()
+        ' prepare columns for DataGridView dgv_Log
+        Dim col_Log_Timestamp As New DataGridViewTextBoxColumn()
+        col_Log_Timestamp.DataPropertyName = "Timestamp"
+        col_Log_Timestamp.Name = "Timestamp"
 
+        Dim col_Log_Playlistfile As New DataGridViewTextBoxColumn()
+        col_Log_Playlistfile.DataPropertyName = "PlaylistFile"
+        col_Log_Playlistfile.Name = "Playlist file"
+
+        Dim col_Log_mp3file As New DataGridViewTextBoxColumn()
+        col_Log_mp3file.DataPropertyName = "Mp3File"
+        col_Log_mp3file.Name = "mp3 file"
+
+        Dim col_Log_Status As New DataGridViewTextBoxColumn()
+        col_Log_Status.DataPropertyName = "Status"
+        col_Log_Status.Name = "Status"
+
+        Dim col_Log_ConvertStatus As New DataGridViewTextBoxColumn()
+        col_Log_ConvertStatus.DataPropertyName = "ConvertStatus"
+        col_Log_ConvertStatus.Name = "Convert"
+
+        Dim col_Log_ConvertStatusImage As New DataGridViewImageColumn()
+        col_Log_ConvertStatusImage.DataPropertyName = "ConvertStatusImage"
+        col_Log_ConvertStatusImage.Name = "Convert"
+
+        Dim col_Log_CoverStatus As New DataGridViewTextBoxColumn()
+        col_Log_CoverStatus.DataPropertyName = "CoverStatus"
+        col_Log_CoverStatus.Name = "Cover"
+
+        Dim col_Log_UploadStatus As New DataGridViewTextBoxColumn()
+        col_Log_UploadStatus.DataPropertyName = "UploadStatus"
+        col_Log_UploadStatus.Name = "Upload"
+
+        With dgv_Log
+            .ReadOnly = True
+            .AllowUserToAddRows = False
+            .AutoGenerateColumns = False
+            .SelectionMode = DataGridViewSelectionMode.FullRowSelect
+            .AutoSizeColumnsMode = DataGridViewAutoSizeColumnMode.AllCells
+            .RowHeadersVisible = False
+
+            .Columns.Add(col_Log_Timestamp)
+            .Columns.Add(col_Log_Playlistfile)
+            .Columns.Add(col_Log_mp3file)
+            .Columns.Add(col_Log_Status)
+            .Columns.Add(col_Log_ConvertStatus)
+            .Columns.Add(col_Log_ConvertStatusImage)
+            .Columns.Add(col_Log_CoverStatus)
+            .Columns.Add(col_Log_UploadStatus)
+
+            .DataSource = bs_Log
+        End With
+
+        bs_Log.DataSource = log.LogEntries
+
+        ' TODO remove these two lines
+        Dim test As New LogEntry("plFile", "mp3File")
+        bs_Log.Add(test)
+
+        refreshDevices()
         grp_Sync.Enabled = False
     End Sub
 
@@ -260,7 +320,7 @@ Public Class frm_Main
         End If
     End Sub
 
-    Private Sub btn_SetMainMusicFolder_Click(sender As Object, e As EventArgs) Handles btn_SetMainMusicFolder_Local.Click
+    Private Sub btn_SetMainMusicFolder_Local_Click(sender As Object, e As EventArgs) Handles btn_SetMainMusicFolder_Local.Click
         With FolderBrowserDialog
             .RootFolder = System.Environment.SpecialFolder.MyComputer
             .ShowNewFolderButton = False
@@ -343,6 +403,11 @@ Public Class frm_Main
         grp_Sync.Enabled = True
     End Sub
 
+    Private Sub btn_Sync_Cancel_Click(sender As Object, e As EventArgs) Handles btn_Sync_Cancel.Click
+        btn_Sync_Cancel.Text = "Cancelling..."
+        bgw_SyncPlaylist.CancelAsync()
+    End Sub
+
 #End Region
 
 
@@ -352,6 +417,7 @@ Public Class frm_Main
     Private Sub bgw_SyncPlaylist_DoWork(sender As Object, e As DoWorkEventArgs) Handles bgw_SyncPlaylist.DoWork
         Dim allTracks As Integer = 0
         Dim currentTrack As Integer = 0
+        Dim logEntry As New LogEntry()
 
         ' get number of Tracks from all playlists
         For Each playlist In preset.Playlists
@@ -363,7 +429,17 @@ Public Class frm_Main
         For Each playlist In preset.Playlists
             For Each track In playlist.Tracks
 
+                If bgw_SyncPlaylist.CancellationPending Then
+                    bgw_SyncPlaylist.ReportProgress(currentTrack * 100 / allTracks, "INFO" & vbTab & "Canceled!")
+
+                    e.Cancel = True
+                    Exit Sub
+                End If
+
                 ' TODO put log in table format
+                logEntry = New LogEntry(playlist.Filename, track.localPath)
+
+                bgw_SyncPlaylist.ReportProgress(currentTrack * 100 / allTracks, logEntry)
 
                 currentTrack += 1
                 Debug.Print(currentTrack & "/" & allTracks & " - Playlist: " & playlist.Filename & ", Track: " & track.localPath)
@@ -374,18 +450,24 @@ Public Class frm_Main
                     If (preset.Convert = True) Then
                         bgw_SyncPlaylist.ReportProgress(currentTrack * 100 / allTracks, "INFO" & vbTab & "Converting...")
                         track.convert(preset.LAMEoptions)
+                        logEntry.ConvertStatus = LogEntry.myStatusEnum.OK
                         bgw_SyncPlaylist.ReportProgress(currentTrack * 100 / allTracks, "INFO" & vbTab & "Conversion OK")
                     End If
 
                     If (preset.EmbedCover = True) Then
                         track.embedCover()
+                        logEntry.CoverStatus = LogEntry.myStatusEnum.OK
+                    Else
+                        logEntry.CoverStatus = LogEntry.myStatusEnum.Skipped
                     End If
 
                     bgw_SyncPlaylist.ReportProgress(currentTrack * 100 / allTracks, "INFO" & vbTab & "Uploading...")
                     track.upload(selectedDevice, preset, justAddedPlaylist)
+                    logEntry.UploadStatus = LogEntry.myStatusEnum.OK
                     bgw_SyncPlaylist.ReportProgress(currentTrack * 100 / allTracks, "INFO" & vbTab & "Upload OK")
                 Else
                     bgw_SyncPlaylist.ReportProgress(currentTrack * 100 / allTracks, "INFO" & vbTab & "File exists")
+                    logEntry.UploadStatus = LogEntry.myStatusEnum.Skipped
                 End If
 
                 tidyUp()
@@ -409,16 +491,29 @@ Public Class frm_Main
             Dim filename As String
             filename = txt_Sync_PlaylistWithAddedTracks.Text.Replace("@date[" & txt_Sync_PlaylistWithAddedTracks.Text.Split("["c)(1).Split("]"c)(0) & "]", DateTime.Now.ToString(format))
 
-            justAddedPlaylist.Filename = My.Application.Info.DirectoryPath & "\tmp\" & filename & " .m3u"
+            justAddedPlaylist.Filename = My.Application.Info.DirectoryPath & "\tmp\" & filename & ".m3u"
             justAddedPlaylist.upload(selectedDevice, preset)
         End If
     End Sub
 
     Private Sub bgw_SyncPlaylist_ProgressChanged(sender As Object, e As ProgressChangedEventArgs) Handles bgw_SyncPlaylist.ProgressChanged
         prb_SyncPlaylists.Value = e.ProgressPercentage
-        txt_Log.AppendText(DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss") & vbTab & e.UserState & vbCrLf)
-        My.Application.DoEvents()
+
+        If (e.UserState.GetType() = GetType(String)) Then
+            txt_Log.AppendText(DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss") & vbTab & e.UserState & vbCrLf)
+            'My.Application.DoEvents()
+        End If
+
+        If (e.UserState.GetType() = GetType(LogEntry)) Then
+            bs_Log.Add(e.UserState)
+        End If
+
     End Sub
+
+    Private Sub bgw_SyncPlaylist_Completed() Handles bgw_SyncPlaylist.RunWorkerCompleted
+        MsgBox("Fertig!")
+    End Sub
+
 #End Region
 
 #End Region
