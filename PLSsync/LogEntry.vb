@@ -1,5 +1,5 @@
 ﻿Public Class LogEntry
-    Private _timestamp As DateTime
+    Private _timestamp As String
     Private _PlaylistFile As String
     Private _mp3File As String
     Private _text As String
@@ -9,11 +9,11 @@
     Private _coverStatus As myStatusEnum
     Private _uploadStatus As myStatusEnum
 
-    Public Property Timestamp As Date
+    Public Property Timestamp As String
         Get
             Return _timestamp
         End Get
-        Set(value As Date)
+        Set(value As String)
             _timestamp = value
         End Set
     End Property
@@ -50,17 +50,17 @@
 
             Select Case value
                 Case LogEntry.myStatusEnum.Waiting
-                    _convertStatusImage = My.Resources.accept
+                    _convertStatusImage = My.Resources.clock
                 Case LogEntry.myStatusEnum.OK
-                    _convertStatusImage = My.Resources.add
-                Case LogEntry.myStatusEnum.Info
-                    _convertStatusImage = My.Resources.arrow_refresh
-                Case LogEntry.myStatusEnum.Warning
-                    _convertStatusImage = My.Resources.delete
-                Case LogEntry.myStatusEnum.Error
-                    _convertStatusImage = My.Resources.folder
-                Case LogEntry.myStatusEnum.Skipped
                     _convertStatusImage = My.Resources.accept
+                Case LogEntry.myStatusEnum.Info
+                    _convertStatusImage = My.Resources.information
+                Case LogEntry.myStatusEnum.Warning
+                    _convertStatusImage = My.Resources._error
+                Case LogEntry.myStatusEnum.Error
+                    _convertStatusImage = My.Resources.exclamation
+                Case LogEntry.myStatusEnum.Skipped
+                    _convertStatusImage = My.Resources.arrow_right
             End Select
         End Set
     End Property
@@ -108,15 +108,19 @@
     End Enum
 
     Public Sub New()
-        Me.Timestamp = Now()
+        Me.Timestamp = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")
 
-        _convertStatusImage = My.Resources.accept
+        ConvertStatus = myStatusEnum.Waiting
+        UploadStatus = myStatusEnum.Waiting
+        CoverStatus = myStatusEnum.Waiting
     End Sub
 
     Public Sub New(ByVal INPlaylistfile As String, INmp3File As String)
-        Me.Timestamp = Now()
+        Me.Timestamp = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")
 
-        _convertStatusImage = My.Resources.accept
+        ConvertStatus = myStatusEnum.Waiting
+        UploadStatus = myStatusEnum.Waiting
+        CoverStatus = myStatusEnum.Waiting
 
         Me.PlaylistFile = INPlaylistfile
         Me.Mp3File = INmp3File

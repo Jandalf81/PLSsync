@@ -34,6 +34,9 @@ Public Class frm_Main
 
     Private Sub tidyUp()
         ' remove temporary mp3 files
+        If (My.Computer.FileSystem.FileExists(My.Application.Info.DirectoryPath + "\tmp\toConvert.mp3") = True) Then
+            My.Computer.FileSystem.DeleteFile(My.Application.Info.DirectoryPath + "\tmp\toConvert.mp3")
+        End If
         If (My.Computer.FileSystem.FileExists(My.Application.Info.DirectoryPath + "\tmp\converted.mp3") = True) Then
             My.Computer.FileSystem.DeleteFile(My.Application.Info.DirectoryPath + "\tmp\converted.mp3")
         End If
@@ -193,6 +196,7 @@ Public Class frm_Main
             .AutoGenerateColumns = False
             .SelectionMode = DataGridViewSelectionMode.FullRowSelect
             .AutoSizeColumnsMode = DataGridViewAutoSizeColumnMode.AllCells
+            .AllowUserToResizeColumns = True
             .RowHeadersVisible = False
 
             .Columns.Add(col_Log_Timestamp)
@@ -210,8 +214,8 @@ Public Class frm_Main
         bs_Log.DataSource = log.LogEntries
 
         ' TODO remove these two lines
-        Dim test As New LogEntry("plFile", "mp3File")
-        bs_Log.Add(test)
+        'Dim test As New LogEntry("plFile", "mp3File")
+        'bs_Log.Add(test)
 
         refreshDevices()
         grp_Sync.Enabled = False
@@ -398,6 +402,8 @@ Public Class frm_Main
 
         bgw_SyncPlaylist.RunWorkerAsync(preset)
 
+        Application.DoEvents()
+
         ' TODO re-enable both groups after BGW is finished
         grp_Devices.Enabled = True
         grp_Sync.Enabled = True
@@ -449,12 +455,17 @@ Public Class frm_Main
                 If (selectedDevice.FileExists(track.remotePath) = False) Then
                     If (preset.Convert = True) Then
                         bgw_SyncPlaylist.ReportProgress(currentTrack * 100 / allTracks, "INFO" & vbTab & "Converting...")
-                        track.convert(preset.LAMEoptions)
-                        logEntry.ConvertStatus = LogEntry.myStatusEnum.OK
-                        bgw_SyncPlaylist.ReportProgress(currentTrack * 100 / allTracks, "INFO" & vbTab & "Conversion OK")
+
+                        If (track.convert(preset.LAMEoptions) = 0) Then
+                            logEntry.ConvertStatus = LogEntry.myStatusEnum.OK
+                            bgw_SyncPlaylist.ReportProgress(currentTrack * 100 / allTracks, "INFO" & vbTab & "Conversion OK")
+                        Else
+                            logEntry.ConvertStatus = LogEntry.myStatusEnum.Error
+                            bgw_SyncPlaylist.ReportProgress(currentTrack * 100 / allTracks, "INFO" & vbTab & "Conversion failed")
+                        End If
                     End If
 
-                    If (preset.EmbedCover = True) Then
+                        If (preset.EmbedCover = True) Then
                         track.embedCover()
                         logEntry.CoverStatus = LogEntry.myStatusEnum.OK
                     Else
@@ -467,6 +478,7 @@ Public Class frm_Main
                     bgw_SyncPlaylist.ReportProgress(currentTrack * 100 / allTracks, "INFO" & vbTab & "Upload OK")
                 Else
                     bgw_SyncPlaylist.ReportProgress(currentTrack * 100 / allTracks, "INFO" & vbTab & "File exists")
+                    logEntry.ConvertStatus = LogEntry.myStatusEnum.Skipped
                     logEntry.UploadStatus = LogEntry.myStatusEnum.Skipped
                 End If
 

@@ -42,28 +42,30 @@ Public Class Playlist
         Me.Filename = file
     End Sub
 
-    Public Sub read()
-        Dim t As Track
-
-        Me.Tracks.Clear()
-
-        If (My.Computer.FileSystem.FileExists(Me.Filename) = True) Then
-            Dim fileReader As System.IO.StreamReader
-            Dim line As String
-
-            fileReader = My.Computer.FileSystem.OpenTextFileReader(Me.Filename)
-
-            Do
-                line = fileReader.ReadLine()
-                If line Is Nothing Then Exit Do
-
-                t = New Track(line)
-                Me.Tracks.Add(t)
-            Loop
-
-            fileReader.Close()
-        End If
-    End Sub
+    'Public Sub read()
+    '    Dim t As Track
+    '
+    '    Me.Tracks.Clear()
+    '
+    '    If (My.Computer.FileSystem.FileExists(Me.Filename) = True) Then
+    '        Dim fileReader As System.IO.StreamReader
+    '        Dim line As String
+    '
+    '        fileReader = My.Computer.FileSystem.OpenTextFileReader(Me.Filename)
+    '
+    '        Do
+    '            line = fileReader.ReadLine()
+    '            If line Is Nothing Then Exit Do
+    '            If line = "#" Then Exit Do
+    '            If line = "" Then Exit Do
+    '
+    '            t = New Track(line)
+    '            Me.Tracks.Add(t)
+    '        Loop
+    '
+    '        fileReader.Close()
+    '    End If
+    'End Sub
 
     Public Sub read(preset As Preset)
         Dim t As Track
@@ -79,6 +81,8 @@ Public Class Playlist
             Do
                 line = fileReader.ReadLine()
                 If line Is Nothing Then Exit Do
+                If line = "#" Then Continue Do
+                If line = "" Then Continue Do
 
                 t = New Track(line, preset)
                 Me.Tracks.Add(t)

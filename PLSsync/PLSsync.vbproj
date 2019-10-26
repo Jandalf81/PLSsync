@@ -160,6 +160,14 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="MediaDevicesLicense.txt" />
+    <None Include="Resources\cancel.png" />
+    <None Include="Resources\arrow_right.png" />
+    <None Include="Resources\error.png" />
+    <None Include="Resources\page_delete.png" />
+    <None Include="Resources\page_add.png" />
+    <None Include="Resources\information.png" />
+    <None Include="Resources\clock.png" />
+    <None Include="Resources\exclamation.png" />
     <None Include="Resources\accept.png" />
     <None Include="Resources\delete.png" />
     <None Include="Resources\add.png" />
