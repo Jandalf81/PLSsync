@@ -11,12 +11,14 @@
             Return _localPath
         End Get
         Set(value As String)
+            '_localPath = "\\?\" & value
             _localPath = value
             _localPathOriginal = value
             _remotePath = Replace(value, _preset.LocalMainPath, _preset.RemoteMainPath)
 
-            _localPathOnly = IO.Path.GetDirectoryName(value)
-            _localFilenameOnly = IO.Path.GetFileName(value)
+            ' TODO remove limitation on lenght of file path > 260 chars
+            _localPathOnly = IO.Path.GetDirectoryName(_localPath)
+            _localFilenameOnly = IO.Path.GetFileName(_localPath)
             _remotePathOnly = IO.Path.GetDirectoryName(_remotePath)
 
             Select Case True
