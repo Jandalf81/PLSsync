@@ -4,6 +4,10 @@
     Private _remotePath As String
     Private _hasCover As Boolean
     Private _coverFile As String
+
+    Private _originalFilesize As Long
+    Private _uploadedFilesize As Long
+
     Private _preset As Preset
 
     Public Property localPath As String
@@ -11,27 +15,34 @@
             Return _localPath
         End Get
         Set(value As String)
-            '_localPath = "\\?\" & value
-            _localPath = value
-            _localPathOriginal = value
-            _remotePath = Replace(value, _preset.LocalMainPath, _preset.RemoteMainPath)
+            Try
+                _localPath = value
+                _localPathOriginal = value
+                _remotePath = Replace(value, _preset.LocalMainPath, _preset.RemoteMainPath)
 
-            ' TODO remove limitation on lenght of file path > 260 chars
-            _localPathOnly = IO.Path.GetDirectoryName(_localPath)
-            _localFilenameOnly = IO.Path.GetFileName(_localPath)
-            _remotePathOnly = IO.Path.GetDirectoryName(_remotePath)
+                ' save original filepath for later use (will be changed when converted)
+                _localPathOnly = IO.Path.GetDirectoryName(_localPath)
+                _localFilenameOnly = IO.Path.GetFileName(_localPath)
+                _remotePathOnly = IO.Path.GetDirectoryName(_remotePath)
 
-            Select Case True
-                Case My.Computer.FileSystem.FileExists(_localPathOnly + "\folder.jpg") = True
-                    _hasCover = True
-                    _coverFile = "folder.jpg"
-                Case My.Computer.FileSystem.FileExists(_localPathOnly + "\folder.png") = True
-                    _hasCover = True
-                    _coverFile = "folder.png"
-                Case Else
-                    _hasCover = False
-                    _coverFile = ""
-            End Select
+                ' save original filesize
+                _originalFilesize = New IO.FileInfo(_localPath).Length
+                _uploadedFilesize = 0
+
+                Select Case True
+                    Case My.Computer.FileSystem.FileExists(_localPathOnly + "\folder.jpg") = True
+                        _hasCover = True
+                        _coverFile = "folder.jpg"
+                    Case My.Computer.FileSystem.FileExists(_localPathOnly + "\folder.png") = True
+                        _hasCover = True
+                        _coverFile = "folder.png"
+                    Case Else
+                        _hasCover = False
+                        _coverFile = ""
+                End Select
+            Catch ex As System.IO.PathTooLongException
+                MsgBox("Path too long!")
+            End Try
         End Set
     End Property
     Public ReadOnly Property LocalPathOriginal As String
@@ -53,6 +64,22 @@
         Get
             Return _coverFile
         End Get
+    End Property
+    Public Property OriginalFilesize As Long
+        Get
+            Return _originalFilesize
+        End Get
+        Set(value As Long)
+            _originalFilesize = value
+        End Set
+    End Property
+    Public Property UploadedFilesize As Long
+        Get
+            Return _uploadedFilesize
+        End Get
+        Set(value As Long)
+            _uploadedFilesize = value
+        End Set
     End Property
 
     Private _localPathOnly As String
@@ -163,6 +190,9 @@
             lame.Dispose()
 
             Me._localPath = My.Application.Info.DirectoryPath + "\tmp\converted.mp3"
+            Me._uploadedFilesize = New IO.FileInfo(_localPath).Length
+        Catch ex As system.io.PathTooLongException
+            MsgBox("Path too long!")
         Catch ex As Exception
             Debug.Print("ERROR: Could not delete """ & My.Application.Info.DirectoryPath + "\tmp\converted.mp3""")
         End Try
@@ -197,5 +227,7 @@
         ' save mp3 file
         mp3.Save()
         mp3.Dispose()
+
+        Me._uploadedFilesize = New IO.FileInfo(_localPath).Length
     End Sub
 End Class
