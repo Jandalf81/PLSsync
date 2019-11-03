@@ -222,7 +222,7 @@ Public Class frm_Main
     End Sub
 
     Private Sub frm_Main_Resize(sender As Object, e As EventArgs) Handles Me.Resize
-        pic_Progress.Refresh()
+        'pic_Progress.Refresh()
     End Sub
 
     Private Sub frm_Main_Closing(sender As Object, e As CancelEventArgs) Handles Me.Closing
@@ -242,6 +242,10 @@ Public Class frm_Main
     End Sub
 
     Private Sub btn_UseSelectedDevice_Click(sender As Object, e As EventArgs) Handles btn_UseSelectedDevice.Click
+        Dim devFreeSpace As Single
+        Dim devSpace As Single
+        Dim devFreePercent As Integer
+
         If (Not selectedDevice Is Nothing) Then
             preset.Save(selectedDevice.Description + "_" + selectedDevice.SerialNumber)
         End If
@@ -253,11 +257,17 @@ Public Class frm_Main
 
         Try
             storageInfo = selectedDevice.GetStorageInfo(selectedDevice.FunctionalObjects(MediaDevices.FunctionalCategory.Storage).First())
+
+            devFreeSpace = Math.Round(storageInfo.FreeSpaceInBytes / 1024 / 1024 / 1024, 2)
+            devSpace = Math.Round(storageInfo.Capacity / 1024 / 1024 / 1024, 2)
+            devFreePercent = Math.Round(storageInfo.FreeSpaceInBytes * 100 / storageInfo.Capacity, 0)
         Catch ex As Exception
             MsgBox(ex.Message)
         End Try
 
-        pic_Progress.Refresh()
+        'pic_Progress.Refresh()
+        myPrg_Storage.myText = String.Format("{0} GB free of {1} GB ({2}%)", devFreeSpace, devSpace, devFreePercent)
+        myPrg_Storage.myValue = Math.Round(storageInfo.FreeSpaceInBytes * 100 / storageInfo.Capacity, 0)
 
         preset = New Preset()
         preset.Load(selectedDevice.Description + "_" + selectedDevice.SerialNumber)
@@ -279,50 +289,50 @@ Public Class frm_Main
 #Region "form grp_Sync"
 
 #Region "form grp_Sync grp_Device"
-    Private Sub pic_Progress_Paint(sender As Object, e As PaintEventArgs) Handles pic_Progress.Paint
-        ' reset
-        e.Graphics.Clear(pic_Progress.BackColor)
-        e.Graphics.DrawRectangle(New Pen(Brushes.Gray, 1), 0, 0, pic_Progress.ClientSize.Width - 1, pic_Progress.ClientSize.Height - 1)
+    'Private Sub pic_Progress_Paint(sender As Object, e As PaintEventArgs) Handles pic_Progress.Paint
+    '    ' reset
+    '    e.Graphics.Clear(pic_Progress.BackColor)
+    '    e.Graphics.DrawRectangle(New Pen(Brushes.Gray, 1), 0, 0, pic_Progress.ClientSize.Width - 1, pic_Progress.ClientSize.Height - 1)
 
-        e.Graphics.TextRenderingHint = Drawing.Text.TextRenderingHint.AntiAliasGridFit
-        Dim sf As New StringFormat()
-        sf.Alignment = StringAlignment.Near
-        sf.LineAlignment = StringAlignment.Center
+    '    e.Graphics.TextRenderingHint = Drawing.Text.TextRenderingHint.AntiAliasGridFit
+    '    Dim sf As New StringFormat()
+    '    sf.Alignment = StringAlignment.Near
+    '    sf.LineAlignment = StringAlignment.Center
 
-        If selectedDevice Is Nothing Then
-            e.Graphics.DrawRectangle(New Pen(Brushes.Gray, 1), 0, 0, pic_Progress.ClientSize.Width - 1, pic_Progress.ClientSize.Height - 1)
-        Else
-            'Dim storageInfo As MediaDevices.MediaStorageInfo = selectedDevice.GetStorageInfo(selectedDevice.FunctionalObjects(MediaDevices.FunctionalCategory.Storage).First())
+    '    If selectedDevice Is Nothing Then
+    '        e.Graphics.DrawRectangle(New Pen(Brushes.Gray, 1), 0, 0, pic_Progress.ClientSize.Width - 1, pic_Progress.ClientSize.Height - 1)
+    '    Else
+    '        'Dim storageInfo As MediaDevices.MediaStorageInfo = selectedDevice.GetStorageInfo(selectedDevice.FunctionalObjects(MediaDevices.FunctionalCategory.Storage).First())
 
-            If storageInfo Is Nothing Then
-                e.Graphics.DrawString("n/a", Me.Font, Brushes.Black, pic_Progress.ClientRectangle, sf)
-            Else
-                ' DeviceMainFolder = storageInfo.Description
+    '        If storageInfo Is Nothing Then
+    '            e.Graphics.DrawString("n/a", Me.Font, Brushes.Black, pic_Progress.ClientRectangle, sf)
+    '        Else
+    '            ' DeviceMainFolder = storageInfo.Description
 
-                Dim percent As Integer = Math.Round(storageInfo.FreeSpaceInBytes * 100 / storageInfo.Capacity, 0)
-                Dim color As Brush
+    '            Dim percent As Integer = Math.Round(storageInfo.FreeSpaceInBytes * 100 / storageInfo.Capacity, 0)
+    '            Dim color As Brush
 
-                Select Case percent
-                    Case < 10
-                        color = Brushes.Red
-                    Case < 20
-                        color = Brushes.Orange
-                    Case Else
-                        color = Brushes.LightGreen
-                End Select
+    '            Select Case percent
+    '                Case < 10
+    '                    color = Brushes.Red
+    '                Case < 20
+    '                    color = Brushes.Orange
+    '                Case Else
+    '                    color = Brushes.LightGreen
+    '            End Select
 
-                ' draw the background
-                Dim fraction As Single = storageInfo.FreeSpaceInBytes / storageInfo.Capacity
-                Dim width As Integer = fraction * pic_Progress.ClientSize.Width
+    '            ' draw the background
+    '            Dim fraction As Single = storageInfo.FreeSpaceInBytes / storageInfo.Capacity
+    '            Dim width As Integer = fraction * pic_Progress.ClientSize.Width
 
-                e.Graphics.FillRectangle(color, 0, 0, width, pic_Progress.ClientSize.Height)
-                e.Graphics.DrawRectangle(New Pen(Brushes.Gray, 1), 0, 0, pic_Progress.ClientSize.Width - 1, pic_Progress.ClientSize.Height - 1)
+    '            e.Graphics.FillRectangle(color, 0, 0, width, pic_Progress.ClientSize.Height)
+    '            e.Graphics.DrawRectangle(New Pen(Brushes.Gray, 1), 0, 0, pic_Progress.ClientSize.Width - 1, pic_Progress.ClientSize.Height - 1)
 
-                ' draw the text
-                e.Graphics.DrawString(String.Format("{0} GB free of {1} GB ({2}%)", Math.Round(storageInfo.FreeSpaceInBytes / 1024 / 1024 / 1024, 2), Math.Round(storageInfo.Capacity / 1024 / 1024 / 1024, 2), percent), Me.Font, Brushes.Black, pic_Progress.ClientRectangle, sf)
-            End If
-        End If
-    End Sub
+    '            ' draw the text
+    '            e.Graphics.DrawString(String.Format("{0} GB free of {1} GB ({2}%)", Math.Round(storageInfo.FreeSpaceInBytes / 1024 / 1024 / 1024, 2), Math.Round(storageInfo.Capacity / 1024 / 1024 / 1024, 2), percent), Me.Font, Brushes.Black, pic_Progress.ClientRectangle, sf)
+    '        End If
+    '    End If
+    'End Sub
 
     Private Sub btn_SetMainMusicFolder_Local_Click(sender As Object, e As EventArgs) Handles btn_SetMainMusicFolder_Local.Click
         With FolderBrowserDialog
@@ -414,6 +424,15 @@ Public Class frm_Main
         bgw_SyncPlaylist.CancelAsync()
     End Sub
 
+    Private Sub refreshDGV_Log()
+        ' invoke lets us use the method from other threads (e. g. the background worker)
+        If dgv_Log.InvokeRequired Then
+            dgv_Log.BeginInvoke(New MethodInvoker(AddressOf refreshDGV_Log))
+        Else
+            dgv_Log.FirstDisplayedScrollingRowIndex = dgv_Log.RowCount - 1
+        End If
+    End Sub
+
 #End Region
 
 
@@ -423,6 +442,10 @@ Public Class frm_Main
     Private Sub bgw_SyncPlaylist_DoWork(sender As Object, e As DoWorkEventArgs) Handles bgw_SyncPlaylist.DoWork
         Dim allTracks As Integer = 0
         Dim currentTrack As Integer = 0
+        Dim currentProgress As Single = 0
+
+        Dim startTimestamp As DateTime = Now()
+
         Dim logEntry As New LogEntry()
 
         ' get number of Tracks from all playlists
@@ -434,9 +457,17 @@ Public Class frm_Main
         ' sync all Tracks in all Playlists
         For Each playlist In preset.Playlists
             For Each track In playlist.Tracks
+                currentTrack += 1
+
+                ' TODO refresh device statistics in each iteration
+
+                currentProgress = currentTrack * 100 / allTracks
+                bgw_SyncPlaylist.ReportProgress(currentProgress, New myLog(allTracks, currentTrack, startTimestamp))
 
                 If bgw_SyncPlaylist.CancellationPending Then
                     bgw_SyncPlaylist.ReportProgress(currentTrack * 100 / allTracks, "INFO" & vbTab & "Canceled!")
+
+                    ' TODO make a clean exit (sync playlists, tidy up)
 
                     e.Cancel = True
                     Exit Sub
@@ -447,7 +478,7 @@ Public Class frm_Main
 
                 bgw_SyncPlaylist.ReportProgress(currentTrack * 100 / allTracks, logEntry)
 
-                currentTrack += 1
+
                 Debug.Print(currentTrack & "/" & allTracks & " - Playlist: " & playlist.Filename & ", Track: " & track.localPath)
 
                 bgw_SyncPlaylist.ReportProgress(currentTrack * 100 / allTracks, "INFO" & vbTab & currentTrack & "/" & allTracks & " - Playlist: " & playlist.Filename & ", Track: " & track.localPath)
@@ -465,7 +496,7 @@ Public Class frm_Main
                         End If
                     End If
 
-                        If (preset.EmbedCover = True) Then
+                    If (preset.EmbedCover = True) Then
                         track.embedCover()
                         logEntry.CoverStatus = LogEntry.myStatusEnum.OK
                     Else
@@ -483,6 +514,9 @@ Public Class frm_Main
                 End If
 
                 tidyUp()
+
+                ' show latest entry in Datagridview
+                refreshDGV_Log()
             Next
         Next
 
@@ -503,7 +537,7 @@ Public Class frm_Main
             Dim filename As String
             filename = txt_Sync_PlaylistWithAddedTracks.Text.Replace("@date[" & txt_Sync_PlaylistWithAddedTracks.Text.Split("["c)(1).Split("]"c)(0) & "]", DateTime.Now.ToString(format))
 
-            justAddedPlaylist.Filename = My.Application.Info.DirectoryPath & "\tmp\" & filename & ".m3u"
+            justAddedPlaylist.Filename = My.Application.Info.DirectoryPath & "\tmp\" & filename & ".m3u8"
             justAddedPlaylist.upload(selectedDevice, preset)
         End If
     End Sub
@@ -520,14 +554,39 @@ Public Class frm_Main
             bs_Log.Add(e.UserState)
         End If
 
+        If (e.UserState.GetType() = GetType(myLog)) Then
+            Dim newLog = e.UserState
+            myPrg_Progress.myValue = e.ProgressPercentage
+            Dim timeSpent As TimeSpan = Now().Subtract(newLog.starttimestamp)
+            Dim timeTotal As New TimeSpan(timeSpent.Ticks / newLog.currentTrack * newLog.allTracks)
+            Dim timeRemaining As New TimeSpan()
+            timeRemaining = timeTotal - timeSpent
+
+            myPrg_Progress.myText = String.Format("Working on Track {0} of {1} ({2}%), spent {3} of approx. {4} (approx. {5} remaining)", newLog.currentTrack, newLog.allTracks, e.ProgressPercentage, timeSpent.ToString("hh\:mm\:ss"), timeTotal.ToString("hh\:mm\:ss"), timeRemaining.ToString("hh\:mm\:ss")) ' , spent {3}, approx. {4} remaining
+        End If
+
     End Sub
 
     Private Sub bgw_SyncPlaylist_Completed() Handles bgw_SyncPlaylist.RunWorkerCompleted
+        Application.DoEvents()
         MsgBox("Fertig!")
     End Sub
-
 #End Region
 
 #End Region
 
+End Class
+
+Public Class myLog
+    Public allTracks As Integer
+    Public currentTrack As Integer
+
+    Public startTimestamp As DateTime
+
+    Public Sub New(INalltracks As Integer, INcurrentTrack As Integer, INtimestamp As DateTime)
+        Me.allTracks = INalltracks
+        Me.currentTrack = INcurrentTrack
+
+        Me.startTimestamp = INtimestamp
+    End Sub
 End Class

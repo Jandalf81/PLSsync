@@ -61,6 +61,9 @@
       <HintPath>..\packages\MediaDevices.1.8.0\lib\net45\MediaDevices.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="myProgressBar">
+      <HintPath>..\..\myProgressBar\myProgressBar\bin\Debug\myProgressBar.dll</HintPath>
+    </Reference>
     <Reference Include="policy.2.0.taglib-sharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=db62eba44689b5b0, processorArchitecture=MSIL">
       <HintPath>..\packages\taglib.2.1.0.0\lib\policy.2.0.taglib-sharp.dll</HintPath>
       <Private>True</Private>
