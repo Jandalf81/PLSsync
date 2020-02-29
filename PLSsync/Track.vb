@@ -160,10 +160,6 @@
         retval = 0
 
         Try
-            'If (My.Computer.FileSystem.FileExists(My.Application.Info.DirectoryPath + "\tmp\converted.mp3") = True) Then
-            '    My.Computer.FileSystem.DeleteFile(My.Application.Info.DirectoryPath + "\tmp\converted.mp3")
-            'End If
-
             FileCopy(Me.localPath, My.Application.Info.DirectoryPath + "\tmp\toConvert.mp3")
             Me._localPath = My.Application.Info.DirectoryPath + "\tmp\toConvert.mp3"
 

@@ -59,9 +59,7 @@ Partial Class frm_Main
         Me.lbl_Sync_StorageInfo = New System.Windows.Forms.Label()
         Me.txt_Sync_DeviceName = New System.Windows.Forms.TextBox()
         Me.lbl_Sync_DeviceName = New System.Windows.Forms.Label()
-        Me.prb_SyncPlaylists = New System.Windows.Forms.ProgressBar()
         Me.btn_Sync_Sync = New System.Windows.Forms.Button()
-        Me.txt_Log = New System.Windows.Forms.TextBox()
         Me.OpenFileDialog = New System.Windows.Forms.OpenFileDialog()
         Me.FolderBrowserDialog = New System.Windows.Forms.FolderBrowserDialog()
         Me.grp_Devices.SuspendLayout()
@@ -140,9 +138,7 @@ Partial Class frm_Main
         Me.grp_Sync.Controls.Add(Me.btn_Sync_Cancel)
         Me.grp_Sync.Controls.Add(Me.dgv_Log)
         Me.grp_Sync.Controls.Add(Me.TableLayoutPanel2)
-        Me.grp_Sync.Controls.Add(Me.prb_SyncPlaylists)
         Me.grp_Sync.Controls.Add(Me.btn_Sync_Sync)
-        Me.grp_Sync.Controls.Add(Me.txt_Log)
         Me.grp_Sync.Location = New System.Drawing.Point(12, 219)
         Me.grp_Sync.Name = "grp_Sync"
         Me.grp_Sync.Size = New System.Drawing.Size(980, 510)
@@ -154,10 +150,10 @@ Partial Class frm_Main
         '
         Me.myPrg_Progress.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.myPrg_Progress.Location = New System.Drawing.Point(7, 376)
+        Me.myPrg_Progress.Location = New System.Drawing.Point(7, 352)
         Me.myPrg_Progress.MinimumSize = New System.Drawing.Size(100, 20)
         Me.myPrg_Progress.Name = "myPrg_Progress"
-        Me.myPrg_Progress.Size = New System.Drawing.Size(967, 20)
+        Me.myPrg_Progress.Size = New System.Drawing.Size(966, 20)
         Stack1.Color = System.Drawing.Color.FromArgb(CType(CType(0, Byte), Integer), CType(CType(192, Byte), Integer), CType(CType(0, Byte), Integer))
         Stack1.MaxValue = 100
         Me.myPrg_Progress.stacks.Add(Stack1)
@@ -166,6 +162,7 @@ Partial Class frm_Main
         'btn_Sync_Cancel
         '
         Me.btn_Sync_Cancel.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.btn_Sync_Cancel.Enabled = False
         Me.btn_Sync_Cancel.Image = Global.PLSsync.My.Resources.Resources.cancel
         Me.btn_Sync_Cancel.ImageAlign = System.Drawing.ContentAlignment.MiddleRight
         Me.btn_Sync_Cancel.Location = New System.Drawing.Point(735, 308)
@@ -182,9 +179,9 @@ Partial Class frm_Main
             Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.dgv_Log.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
-        Me.dgv_Log.Location = New System.Drawing.Point(7, 448)
+        Me.dgv_Log.Location = New System.Drawing.Point(7, 378)
         Me.dgv_Log.Name = "dgv_Log"
-        Me.dgv_Log.Size = New System.Drawing.Size(967, 56)
+        Me.dgv_Log.Size = New System.Drawing.Size(967, 126)
         Me.dgv_Log.TabIndex = 7
         '
         'TableLayoutPanel2
@@ -211,7 +208,7 @@ Partial Class frm_Main
         Me.grp_PlaylistFiles.Controls.Add(Me.dgv_PlaylistFiles)
         Me.grp_PlaylistFiles.Location = New System.Drawing.Point(486, 3)
         Me.grp_PlaylistFiles.Name = "grp_PlaylistFiles"
-        Me.grp_PlaylistFiles.Size = New System.Drawing.Size(478, 212)
+        Me.grp_PlaylistFiles.Size = New System.Drawing.Size(478, 277)
         Me.grp_PlaylistFiles.TabIndex = 2
         Me.grp_PlaylistFiles.TabStop = False
         Me.grp_PlaylistFiles.Text = "Playlist files"
@@ -225,7 +222,7 @@ Partial Class frm_Main
         Me.TableLayoutPanel1.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50.0!))
         Me.TableLayoutPanel1.Controls.Add(Me.btn_PlaylistFiles_Add, 0, 0)
         Me.TableLayoutPanel1.Controls.Add(Me.btn_PlaylistFiles_Remove, 1, 0)
-        Me.TableLayoutPanel1.Location = New System.Drawing.Point(6, 168)
+        Me.TableLayoutPanel1.Location = New System.Drawing.Point(6, 226)
         Me.TableLayoutPanel1.Name = "TableLayoutPanel1"
         Me.TableLayoutPanel1.RowCount = 1
         Me.TableLayoutPanel1.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50.0!))
@@ -270,7 +267,7 @@ Partial Class frm_Main
         Me.dgv_PlaylistFiles.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
         Me.dgv_PlaylistFiles.Location = New System.Drawing.Point(6, 19)
         Me.dgv_PlaylistFiles.Name = "dgv_PlaylistFiles"
-        Me.dgv_PlaylistFiles.Size = New System.Drawing.Size(466, 143)
+        Me.dgv_PlaylistFiles.Size = New System.Drawing.Size(466, 201)
         Me.dgv_PlaylistFiles.TabIndex = 0
         '
         'grp_SelectedDevice
@@ -483,15 +480,6 @@ Partial Class frm_Main
         Me.lbl_Sync_DeviceName.TabIndex = 0
         Me.lbl_Sync_DeviceName.Text = "Device Name:"
         '
-        'prb_SyncPlaylists
-        '
-        Me.prb_SyncPlaylists.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
-            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.prb_SyncPlaylists.Location = New System.Drawing.Point(7, 349)
-        Me.prb_SyncPlaylists.Name = "prb_SyncPlaylists"
-        Me.prb_SyncPlaylists.Size = New System.Drawing.Size(967, 23)
-        Me.prb_SyncPlaylists.TabIndex = 5
-        '
         'btn_Sync_Sync
         '
         Me.btn_Sync_Sync.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
@@ -505,18 +493,6 @@ Partial Class frm_Main
         Me.btn_Sync_Sync.TextAlign = System.Drawing.ContentAlignment.MiddleRight
         Me.btn_Sync_Sync.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText
         Me.btn_Sync_Sync.UseVisualStyleBackColor = True
-        '
-        'txt_Log
-        '
-        Me.txt_Log.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
-            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.txt_Log.Location = New System.Drawing.Point(7, 402)
-        Me.txt_Log.Multiline = True
-        Me.txt_Log.Name = "txt_Log"
-        Me.txt_Log.ScrollBars = System.Windows.Forms.ScrollBars.Both
-        Me.txt_Log.Size = New System.Drawing.Size(967, 40)
-        Me.txt_Log.TabIndex = 3
-        Me.txt_Log.WordWrap = False
         '
         'FolderBrowserDialog
         '
@@ -535,7 +511,6 @@ Partial Class frm_Main
         Me.grp_Devices.ResumeLayout(False)
         CType(Me.dgv_Devices, System.ComponentModel.ISupportInitialize).EndInit()
         Me.grp_Sync.ResumeLayout(False)
-        Me.grp_Sync.PerformLayout()
         CType(Me.dgv_Log, System.ComponentModel.ISupportInitialize).EndInit()
         Me.TableLayoutPanel2.ResumeLayout(False)
         Me.grp_PlaylistFiles.ResumeLayout(False)
@@ -552,9 +527,7 @@ Partial Class frm_Main
     Friend WithEvents btn_UseSelectedDevice As Button
     Friend WithEvents grp_Sync As GroupBox
     Friend WithEvents OpenFileDialog As OpenFileDialog
-    Friend WithEvents txt_Log As TextBox
     Friend WithEvents btn_Sync_Sync As Button
-    Friend WithEvents prb_SyncPlaylists As ProgressBar
     Friend WithEvents FolderBrowserDialog As FolderBrowserDialog
     Friend WithEvents TableLayoutPanel2 As TableLayoutPanel
     Friend WithEvents grp_PlaylistFiles As GroupBox

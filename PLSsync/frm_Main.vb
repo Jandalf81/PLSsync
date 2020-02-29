@@ -4,6 +4,8 @@ Public Class frm_Main
     Public preset As New Preset()
     Public log As New Log()
 
+    Public logFile As String
+
     Public devices As IEnumerable(Of MediaDevices.MediaDevice)
     Public selectedDevice As MediaDevices.MediaDevice
     Public storageInfo As MediaDevices.MediaStorageInfo
@@ -45,50 +47,16 @@ Public Class frm_Main
             My.Computer.FileSystem.DeleteFile(My.Application.Info.DirectoryPath + "\tmp\embedCover.mp3")
         End If
 
-        ' remove temporary m3u files
-        For Each file As String In System.IO.Directory.GetFiles(My.Application.Info.DirectoryPath + "\tmp\", "*.m3u")
+        ' remove temporary m3u8 files
+        For Each file As String In System.IO.Directory.GetFiles(My.Application.Info.DirectoryPath + "\tmp\", "*.m3u8")
             My.Computer.FileSystem.DeleteFile(file)
         Next
     End Sub
 
-    'Private Sub Button1_Click(sender As Object, e As EventArgs)
-    '    Dim devices As IEnumerable(Of MediaDevices.MediaDevice) = MediaDevices.MediaDevice.GetDevices()
-    '
-    '    For Each device In devices
-    '        MsgBox("FriendlyName: " + device.FriendlyName + vbCrLf +
-    '               "Description: " + device.Description + vbCrLf +
-    '               "Manufacturer: " + device.Manufacturer)
-    '
-    '        If (device.Description = "Pixel 2") Then
-    '            device.Connect()
-    '
-    '            Dim directories As IEnumerable(Of String) = device.EnumerateDirectories("/", "", IO.SearchOption.TopDirectoryOnly)
-    '            For Each directory In directories
-    '                MsgBox("Directory: " + directory)
-    '            Next
-    '
-    '            Dim contentLocations As IEnumerable(Of String) = device.GetContentLocations(MediaDevices.ContentType.Audio)
-    '            For Each contentLocation In contentLocations
-    '                MsgBox("Content Location: " + contentLocation)
-    '            Next
-    '        End If
-    '    Next
-    'End Sub
-
-    'Private Sub Button1_Click_1(sender As Object, e As EventArgs) Handles Button1.Click
-    '    Dim t As New Track("E:\_PARsync\Chiptunes\Chipzel\Disconnected (2010)\01 - Something beautiful.mp3")
-
-    '    txt_Log.Text += DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss: ") & "Starte Konvertierung..." + vbCrLf
-    '    t.convert(preset.LAMEoptions)
-    '    txt_Log.Text += DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss: ") & "Konvertierung beendet" + vbCrLf
-
-    '    txt_Log.Text += DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss: ") & "Starte Upload..." + vbCrLf
-    '    t.upload()
-    '    txt_Log.Text += DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss: ") & "Upload beendet" + vbCrLf
-    'End Sub
-
 #Region "form"
     Private Sub frm_Main_Load(sender As Object, e As EventArgs) Handles Me.Load
+        prepareDirectories()
+
         ' prepare columns for DataGridView dgv_Devices
         Dim col_FriendlyName As New DataGridViewTextBoxColumn()
         col_FriendlyName.DataPropertyName = "FriendlyName"
@@ -289,51 +257,6 @@ Public Class frm_Main
 #Region "form grp_Sync"
 
 #Region "form grp_Sync grp_Device"
-    'Private Sub pic_Progress_Paint(sender As Object, e As PaintEventArgs) Handles pic_Progress.Paint
-    '    ' reset
-    '    e.Graphics.Clear(pic_Progress.BackColor)
-    '    e.Graphics.DrawRectangle(New Pen(Brushes.Gray, 1), 0, 0, pic_Progress.ClientSize.Width - 1, pic_Progress.ClientSize.Height - 1)
-
-    '    e.Graphics.TextRenderingHint = Drawing.Text.TextRenderingHint.AntiAliasGridFit
-    '    Dim sf As New StringFormat()
-    '    sf.Alignment = StringAlignment.Near
-    '    sf.LineAlignment = StringAlignment.Center
-
-    '    If selectedDevice Is Nothing Then
-    '        e.Graphics.DrawRectangle(New Pen(Brushes.Gray, 1), 0, 0, pic_Progress.ClientSize.Width - 1, pic_Progress.ClientSize.Height - 1)
-    '    Else
-    '        'Dim storageInfo As MediaDevices.MediaStorageInfo = selectedDevice.GetStorageInfo(selectedDevice.FunctionalObjects(MediaDevices.FunctionalCategory.Storage).First())
-
-    '        If storageInfo Is Nothing Then
-    '            e.Graphics.DrawString("n/a", Me.Font, Brushes.Black, pic_Progress.ClientRectangle, sf)
-    '        Else
-    '            ' DeviceMainFolder = storageInfo.Description
-
-    '            Dim percent As Integer = Math.Round(storageInfo.FreeSpaceInBytes * 100 / storageInfo.Capacity, 0)
-    '            Dim color As Brush
-
-    '            Select Case percent
-    '                Case < 10
-    '                    color = Brushes.Red
-    '                Case < 20
-    '                    color = Brushes.Orange
-    '                Case Else
-    '                    color = Brushes.LightGreen
-    '            End Select
-
-    '            ' draw the background
-    '            Dim fraction As Single = storageInfo.FreeSpaceInBytes / storageInfo.Capacity
-    '            Dim width As Integer = fraction * pic_Progress.ClientSize.Width
-
-    '            e.Graphics.FillRectangle(color, 0, 0, width, pic_Progress.ClientSize.Height)
-    '            e.Graphics.DrawRectangle(New Pen(Brushes.Gray, 1), 0, 0, pic_Progress.ClientSize.Width - 1, pic_Progress.ClientSize.Height - 1)
-
-    '            ' draw the text
-    '            e.Graphics.DrawString(String.Format("{0} GB free of {1} GB ({2}%)", Math.Round(storageInfo.FreeSpaceInBytes / 1024 / 1024 / 1024, 2), Math.Round(storageInfo.Capacity / 1024 / 1024 / 1024, 2), percent), Me.Font, Brushes.Black, pic_Progress.ClientRectangle, sf)
-    '        End If
-    '    End If
-    'End Sub
-
     Private Sub btn_SetMainMusicFolder_Local_Click(sender As Object, e As EventArgs) Handles btn_SetMainMusicFolder_Local.Click
         With FolderBrowserDialog
             .RootFolder = System.Environment.SpecialFolder.MyComputer
@@ -407,16 +330,23 @@ Public Class frm_Main
     Private Sub btn_Sync_Sync_Click(sender As Object, e As EventArgs) Handles btn_Sync_Sync.Click
         preset.Save(selectedDevice.Description + "_" + selectedDevice.SerialNumber)
 
+        logFile = My.Application.Info.DirectoryPath & "\logs\ " & DateTime.Now.ToString("yyyy-MM-dd_HH-mm-ss") & ".txt"
+        logToFile(logFile, "*****************")
+        logToFile(logFile, "* Start of Sync *")
+        logToFile(logFile, "*****************")
+        logToFile(logFile, "Device: " & selectedDevice.Description)
+        logToFile(logFile, "Serial: " & selectedDevice.SerialNumber)
+        logToFile(logFile, "*****************")
+
         grp_Devices.Enabled = False
-        grp_Sync.Enabled = False
+        grp_SelectedDevice.Enabled = False
+        grp_PlaylistFiles.Enabled = False
+        btn_Sync_Sync.Enabled = False
+        btn_Sync_Cancel.Enabled = True
 
         bgw_SyncPlaylist.RunWorkerAsync(preset)
 
         Application.DoEvents()
-
-        ' TODO re-enable both groups after BGW is finished
-        grp_Devices.Enabled = True
-        grp_Sync.Enabled = True
     End Sub
 
     Private Sub btn_Sync_Cancel_Click(sender As Object, e As EventArgs) Handles btn_Sync_Cancel.Click
@@ -448,6 +378,10 @@ Public Class frm_Main
 
         Dim logEntry As New LogEntry()
 
+        Dim LAMEretval As Integer = 0
+
+        btn_Sync_Cancel.Text = "Cancel"
+
         ' get number of Tracks from all playlists
         For Each playlist In preset.Playlists
             playlist.read(preset)
@@ -456,8 +390,12 @@ Public Class frm_Main
 
         ' sync all Tracks in all Playlists
         For Each playlist In preset.Playlists
+            logToFile(logFile, "Opening playlist " & playlist.Filename)
+
             For Each track In playlist.Tracks
                 currentTrack += 1
+
+                logToFile(logFile, "  Working on Track " & track.LocalPathOriginal)
 
                 ' TODO refresh device statistics in each iteration
 
@@ -465,50 +403,48 @@ Public Class frm_Main
                 bgw_SyncPlaylist.ReportProgress(currentProgress, New myLog(allTracks, currentTrack, startTimestamp))
 
                 If bgw_SyncPlaylist.CancellationPending Then
-                    bgw_SyncPlaylist.ReportProgress(currentTrack * 100 / allTracks, "INFO" & vbTab & "Canceled!")
-
                     ' TODO make a clean exit (sync playlists, tidy up)
 
                     e.Cancel = True
+                    logToFile(logFile, "Process canceled by user!")
+
                     Exit Sub
                 End If
 
-                ' TODO put log in table format
                 logEntry = New LogEntry(playlist.Filename, track.localPath)
-
                 bgw_SyncPlaylist.ReportProgress(currentTrack * 100 / allTracks, logEntry)
 
-
-                Debug.Print(currentTrack & "/" & allTracks & " - Playlist: " & playlist.Filename & ", Track: " & track.localPath)
-
-                bgw_SyncPlaylist.ReportProgress(currentTrack * 100 / allTracks, "INFO" & vbTab & currentTrack & "/" & allTracks & " - Playlist: " & playlist.Filename & ", Track: " & track.localPath)
-
                 If (selectedDevice.FileExists(track.remotePath) = False) Then
-                    If (preset.Convert = True) Then
-                        bgw_SyncPlaylist.ReportProgress(currentTrack * 100 / allTracks, "INFO" & vbTab & "Converting...")
+                    logToFile(logFile, "    Track does not exist on device")
 
-                        If (track.convert(preset.LAMEoptions) = 0) Then
+                    If (preset.Convert = True) Then
+                        logToFile(logFile, "    Converting file...")
+
+                        LAMEretval = track.convert(preset.LAMEoptions)
+                        If (LAMEretval = 0) Then
                             logEntry.ConvertStatus = LogEntry.myStatusEnum.OK
-                            bgw_SyncPlaylist.ReportProgress(currentTrack * 100 / allTracks, "INFO" & vbTab & "Conversion OK")
+                            logToFile(logFile, "      Conversion OK")
                         Else
                             logEntry.ConvertStatus = LogEntry.myStatusEnum.Error
-                            bgw_SyncPlaylist.ReportProgress(currentTrack * 100 / allTracks, "INFO" & vbTab & "Conversion failed")
+                            logToFile(logFile, "      Conversion FAILED, error code " & LAMEretval)
                         End If
                     End If
 
                     If (preset.EmbedCover = True) Then
+                        logToFile(logFile, "    Embedding cover")
+
                         track.embedCover()
                         logEntry.CoverStatus = LogEntry.myStatusEnum.OK
                     Else
                         logEntry.CoverStatus = LogEntry.myStatusEnum.Skipped
                     End If
 
-                    bgw_SyncPlaylist.ReportProgress(currentTrack * 100 / allTracks, "INFO" & vbTab & "Uploading...")
+                    logToFile(logFile, "    Uploading Track...")
                     track.upload(selectedDevice, preset, justAddedPlaylist)
                     logEntry.UploadStatus = LogEntry.myStatusEnum.OK
-                    bgw_SyncPlaylist.ReportProgress(currentTrack * 100 / allTracks, "INFO" & vbTab & "Upload OK")
                 Else
-                    bgw_SyncPlaylist.ReportProgress(currentTrack * 100 / allTracks, "INFO" & vbTab & "File exists")
+                    logToFile(logFile, "    Track exists on device")
+
                     logEntry.ConvertStatus = LogEntry.myStatusEnum.Skipped
                     logEntry.UploadStatus = LogEntry.myStatusEnum.Skipped
                 End If
@@ -523,6 +459,8 @@ Public Class frm_Main
         ' sync Playlists if checked
         If (preset.SyncPlaylists = True) Then
             For Each playlist In preset.Playlists
+                logToFile(logFile, "Uploading original Playlist file " & playlist.Filename)
+
                 playlist.upload(selectedDevice, preset)
             Next
         End If
@@ -538,18 +476,14 @@ Public Class frm_Main
             filename = txt_Sync_PlaylistWithAddedTracks.Text.Replace("@date[" & txt_Sync_PlaylistWithAddedTracks.Text.Split("["c)(1).Split("]"c)(0) & "]", DateTime.Now.ToString(format))
 
             justAddedPlaylist.Filename = My.Application.Info.DirectoryPath & "\tmp\" & filename & ".m3u8"
+
+            logToFile(logFile, "Uploading new Playlist file " & justAddedPlaylist.Filename)
+
             justAddedPlaylist.upload(selectedDevice, preset)
         End If
     End Sub
 
     Private Sub bgw_SyncPlaylist_ProgressChanged(sender As Object, e As ProgressChangedEventArgs) Handles bgw_SyncPlaylist.ProgressChanged
-        prb_SyncPlaylists.Value = e.ProgressPercentage
-
-        If (e.UserState.GetType() = GetType(String)) Then
-            txt_Log.AppendText(DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss") & vbTab & e.UserState & vbCrLf)
-            'My.Application.DoEvents()
-        End If
-
         If (e.UserState.GetType() = GetType(LogEntry)) Then
             bs_Log.Add(e.UserState)
         End If
@@ -569,6 +503,13 @@ Public Class frm_Main
 
     Private Sub bgw_SyncPlaylist_Completed() Handles bgw_SyncPlaylist.RunWorkerCompleted
         Application.DoEvents()
+
+        grp_Devices.Enabled = True
+        grp_SelectedDevice.Enabled = True
+        grp_PlaylistFiles.Enabled = True
+        btn_Sync_Sync.Enabled = True
+        btn_Sync_Cancel.Enabled = False
+
         MsgBox("Fertig!")
     End Sub
 #End Region

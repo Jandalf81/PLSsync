@@ -91,10 +91,6 @@ Public Class Preset
         Dim x As New Xml.Serialization.XmlSerializer(Me.GetType)
         Dim fileWriter As IO.StreamWriter
 
-        If Not (My.Computer.FileSystem.DirectoryExists(My.Application.Info.DirectoryPath + "\presets\")) Then
-            My.Computer.FileSystem.CreateDirectory(My.Application.Info.DirectoryPath + "\presets\")
-        End If
-
         fileWriter = My.Computer.FileSystem.OpenTextFileWriter(My.Application.Info.DirectoryPath + "\presets\" + myPreset + ".xml", False)
         x.Serialize(fileWriter, Me)
         fileWriter.Close()
@@ -103,10 +99,6 @@ Public Class Preset
     Public Sub Load(myPreset As String)
         Dim IPreset As New Preset()
         Dim x As New Xml.Serialization.XmlSerializer(Me.GetType)
-
-        If Not (My.Computer.FileSystem.DirectoryExists(My.Application.Info.DirectoryPath + "\presets\")) Then
-            My.Computer.FileSystem.CreateDirectory(My.Application.Info.DirectoryPath + "\presets\")
-        End If
 
         If (My.Computer.FileSystem.FileExists(My.Application.Info.DirectoryPath + "\presets\" + myPreset + ".xml")) Then
             Using fs As New IO.FileStream(My.Application.Info.DirectoryPath + "\presets\" + myPreset + ".xml", IO.FileMode.Open)

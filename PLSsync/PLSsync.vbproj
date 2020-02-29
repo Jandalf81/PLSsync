@@ -131,6 +131,7 @@
     <Compile Include="Playlist.vb" />
     <Compile Include="Preset.vb" />
     <Compile Include="Track.vb" />
+    <Compile Include="_functions.vb" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="frm_AndroidTree.resx">
